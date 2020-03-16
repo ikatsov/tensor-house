@@ -7,3 +7,5 @@
 **[ D003 ]** [Deep reinforcement learning for supply chain and price optimization](https://blog.griddynamics.com/deep-reinforcement-learning-for-supply-chain-and-price-optimization/)
 
 **[ D004 ]** [A guide to dynamic pricing algorithms](https://blog.griddynamics.com/dynamic-pricing-algorithms/)
+
+**[ D005 ]** [Customer2Vec: Representation learning and AutoML for customer analytics and personalization](https://blog.griddynamics.com/customer2vec-representation-learning-and-automl-for-customer-analytics-and-personalization/)
