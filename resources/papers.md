@@ -16,7 +16,8 @@ What follows is a manually curated list of papers in modern data science and ope
 7. **[ BBVA2018 ]** Baldassini L., Serrano J. -- client2vec: Towards Systematic Baselines for Banking Applications
 8. **[ Santander2018 ]** Mancisidor R., Kampffmeyer M., Aas K., Jenssen R. -- Segment-Based Credit Scoring Using Latent Clusters in the Variational Autoencoder, 2018
 9. **[ Zalando2017 ]** Lang T., Rettenmeier M. -- Understanding Consumer Behavior with Recurrent Neural Networks, 2017
-10. Netzer O., Lattin J., Srinivasan V. -- A Hidden Markov Model of Customer Relationship Dynamics, 2008
+10. **[ Facebook2017 ]** Wu L., Fisch A., Chopra S., Adams K., Bordes A. and Weston J. -- StarSpace: Embed All The Things!, 2017
+11. Netzer O., Lattin J., Srinivasan V. -- A Hidden Markov Model of Customer Relationship Dynamics, 2008
 
 ### Personalized Recommendations, Ads, and Promotions
 
