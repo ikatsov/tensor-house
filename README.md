@@ -15,11 +15,11 @@ TensorHouse contains the following resources:
 ### Illustrative Examples
 *Strategic price optimization using reinforcement learning: \
 DQN learns a Hi-Lo pricing policy that switches between regular and discounted prices*
-![Price Optimization Using RL Animation](https://github.com/ikatsov/algorithmic-marketing-examples/blob/master/resources/hilo-pricing-dqn-training-animation.gif)
+![Price Optimization Using RL Animation](https://github.com/ikatsov/tensor-house/blob/master/resources/hilo-pricing-dqn-training-animation.gif)
 
-*Semantic analysis of customer transactions using NLP methods: \
-Word2vec learns products embeddings from sequences of orders*
-![Learning Semantic Item Representation from Transactions](https://github.com/ikatsov/algorithmic-marketing-examples/blob/master/resources/item2vec-clustering.gif)
+*Supply chain optimization using reinforcement learning: \
+World Of Supply simulation environment*
+![Price Optimization Using RL Animation](https://github.com/ikatsov/tensor-house/blob/master/resources/demo-animation-world-of-supply.gif)
 
 ### List of Models 
 
@@ -42,6 +42,7 @@ Word2vec learns products embeddings from sequences of orders*
   * Price Optimization using Reinforcement Learning (DQN)
 * Supply Chain
   * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3)
+  * World Of Supply: A Supply Chain Simulator for Reinforcement Learning Based Optimization
 
 ### Approach
 * The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
