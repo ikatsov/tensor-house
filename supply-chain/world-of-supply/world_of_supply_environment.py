@@ -107,7 +107,7 @@ class Transport(Agent):
         
     def try_unloading(self):        
         if self.destination.storage.try_add_units({ self.product_id: self.payload }):
-            self.destination.consumer.on_order_reception(self.product_id, self.payload)
+            self.destination.consumer.on_order_reception(self.source.id, self.product_id, self.payload)
             self.payload = 0
 
     def act(self, control):
@@ -304,9 +304,9 @@ class ConsumerUnit:
     
     @dataclass
     class Control:
-        product_id: int           # what to purchase
-        source_id: int            # where to purchase  
-        quantity: int             # how many to purchase
+        consumer_product_id: int  # what to purchase
+        consumer_source_id: int   # where to purchase  
+        consumer_quantity: int    # how many to purchase
             
     @dataclass
     class Config:
@@ -315,21 +315,25 @@ class ConsumerUnit:
     def __init__(self, facility, sources):
         self.facility = facility
         self.sources = sources
-        self.open_orders = Counter()
+        self.open_orders = {}
+        for s in self.sources:
+            self.open_orders[s.id] = Counter()
         self.economy = ConsumerUnit.Economy()
         
-    def on_order_reception(self, product_id, quantity):
+    def on_order_reception(self, source_id, product_id, quantity):
         self.economy.total_units_received += quantity
-        self.open_orders[product_id] -= quantity
+        self.open_orders[source_id][product_id] -= quantity
     
     def act(self, control):
-        if control.product_id is None or control.quantity <= 0:
+        if control.consumer_product_id is None or control.consumer_quantity <= 0:
             return BalanceSheet()
         
-        self.open_orders[control.product_id] += control.quantity
-        order = DistributionUnit.Order(self.facility, control.product_id, control.quantity)
-        self.economy.total_units_purchased += control.quantity
-        return BalanceSheet(0, self.sources[control.source_id].distribution.place_order( order ))
+        source_obj = self.sources[control.consumer_source_id]
+        self.open_orders[source_obj.id][control.consumer_product_id] += control.consumer_quantity
+        order = DistributionUnit.Order(self.facility, control.consumer_product_id, control.consumer_quantity)
+        order_cost = source_obj.distribution.place_order( order )
+        self.economy.total_units_purchased += control.consumer_quantity
+        return BalanceSheet(0, order_cost)
         
     
 class SellerUnit:
@@ -493,7 +497,7 @@ class World:
         for facility_id, ctrl in control.facility_controls.items():
             balance_sheets[facility_id] = self.facilities[facility_id].act(ctrl)
             
-        return World.StepOutcome(balance_sheets)
+        return World.StepOutcome(facility_step_balance_sheets = balance_sheets)
     
     def create_cell(self, x, y, clazz):
         self.grid[x][y] = clazz(x, y)
@@ -631,16 +635,16 @@ class WorldBuilder:
 #  ======= Baseline control policies               
 class SimpleControlPolicy:    
     
-    def get_control(self, world):
+    def compute_control(self, world):
         
         def default_facility_control(unit_price, product_id, source_id):
             return FacilityCell.Control(
                 unit_price = unit_price,
                 end_unit_price = 500,
                 production_rate = 5,
-                product_id = product_id,
-                source_id = source_id,
-                quantity = 5
+                consumer_product_id = product_id,
+                consumer_source_id = source_id,
+                consumer_quantity = 5
             )
         
         ctrl = dict()
@@ -665,7 +669,7 @@ class SimpleControlPolicy:
             
         inputs = facility.bom.inputs
         available_inventory = facility.storage.stock_levels
-        inflight_orders = facility.consumer.open_orders
+        inflight_orders = sum(facility.consumer.open_orders.values(), Counter())
         booked_inventory = available_inventory + inflight_orders
         
         most_neeed_product_id = None

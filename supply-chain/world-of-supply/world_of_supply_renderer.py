@@ -3,6 +3,7 @@ from PIL import Image, ImageFont, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
+from collections import Counter
 import yaml
 from multipledispatch import dispatch
 import importlib
@@ -11,7 +12,6 @@ import sys
 from IPython.display import display, HTML
 
 import world_of_supply_environment as ws
-importlib.reload(ws)
 
 class Utils:
     def ascii_progress_bar(done, limit, bar_lenght_char = 15):
@@ -56,7 +56,7 @@ class AsciiWorldStatusPrinter():
     
     @dispatch(ws.FacilityCell)
     def status(facility: ws.FacilityCell) -> list:
-        status = AsciiWorldStatusPrinter.cell_status(facility)
+        status = [f"{facility.id} ({facility.x}, {facility.y})"] 
         
         substatuses = [f"Balance: {facility.economy.total_balance}"]
         if facility.distribution is not None:
@@ -65,11 +65,12 @@ class AsciiWorldStatusPrinter():
                                 for v in facility.distribution.fleet]
                               ])
             q = facility.distribution.order_queue
-            ordered_quantity = sum([ order.quantity for order in q])
-            substatuses.append( [f"Inbound orders: {len(q)}, total units: {ordered_quantity}"] )
+            inbound_orders = [ f"{order.product_id}:{order.quantity} -> {order.destination.id}" for order in q]
+            substatuses.append( [f"Inbound orders:", inbound_orders] )
             
         if facility.consumer is not None:
-            substatuses.append( [f"Outbound orders: {dict(facility.consumer.open_orders)}"] )
+            outbound_orders = [ f"{src} -> {AsciiWorldStatusPrinter.counter(order)}" for src, order in facility.consumer.open_orders.items()]
+            substatuses.append( [f"Outbound orders:", outbound_orders] )
             substatuses.append( [f"Total units purchased: {facility.consumer.economy.total_units_purchased}"] )
             substatuses.append( [f"Total units received: {facility.consumer.economy.total_units_received}"] )
             
@@ -84,7 +85,10 @@ class AsciiWorldStatusPrinter():
     def status(storage: ws.StorageUnit) -> list:
         return [f"Usage: {Utils.ascii_progress_bar(storage.used_capacity(), storage.max_capacity)}",
                 f"Storage cost/unit: {storage.economy.unit_storage_cost}",
-                f"Inventory: {dict(storage.stock_levels)}"]
+                f"Inventory: {AsciiWorldStatusPrinter.counter(storage.stock_levels)}"]
+    
+    def counter(counter) -> str:
+        return dict(counter + Counter()) # this removes zero counters
 
     
 class AsciiWorldRenderer(WorldRenderer):
@@ -143,7 +147,7 @@ class AsciiWorldRenderer(WorldRenderer):
         test_canvas = ImageDraw.Draw(test_img)
         (map_w, map_h) = test_canvas.multiline_textsize(test_text, font=font)
         img_w = map_w + 2 * margin_side
-        img_h = int(map_h * 3.0)
+        img_h = int(map_h * 4.0)
         
         img = PIL.Image.new('RGB', (img_w, img_h), color='#263238')
         canvas = ImageDraw.Draw(img)
@@ -162,8 +166,7 @@ class AsciiWorldRenderer(WorldRenderer):
         img.paste(logo, (int(img_w/2 - img_w/10), 0), mask=logo)
         
         # print status
-        #font = ImageFont.truetype("resources/FiraMono-Regular.ttf", 12)
-        font = ImageFont.truetype("resources/monaco.ttf", 12)
+        font = ImageFont.truetype("resources/monaco.ttf", 11)
         status = AsciiWorldStatusPrinter.status(world)
         n_columns = 3
         n_rows = math.ceil(len(status) / n_columns)
@@ -171,10 +174,13 @@ class AsciiWorldRenderer(WorldRenderer):
         for i in range(n_columns):
             column_left_x = img_w/2 - (n_columns * col_wide)/2 + col_wide*i
             canvas.multiline_text((column_left_x, map_h * 1.1), 
-                                  yaml.dump(status[i*n_rows : (i+1)*n_rows], default_style=None), 
+                                  self.to_yaml(status[i*n_rows : (i+1)*n_rows]), 
                                   font=font, fill='#BBBBBB')
         
         return img
+    
+    def to_yaml(self, obj):
+        return yaml.dump(obj).replace("'", '')
 
     def railroad_sprite(self, x, y, grid):
         top = False
