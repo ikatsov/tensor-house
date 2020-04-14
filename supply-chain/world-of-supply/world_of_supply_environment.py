@@ -6,6 +6,7 @@ from collections import deque
 import numpy as np
 import random as rnd
 import networkx as nx
+from enum import Enum, auto
 
 class Cell(ABC):
     def __init__(self, x, y):
@@ -93,7 +94,7 @@ class Transport(Agent):
             return len(self.path)
     
     def is_enroute(self):
-        return self.step != 0
+        return self.destination is not None
 
     def current_location(self):
         if self.path == None:
@@ -130,11 +131,12 @@ class Transport(Agent):
                     self.location_pointer += self.step
                 else:
                     self.step = 0    # arrived back to the source
+                    self.destination = None
                     
         return self.economy.step_balance_sheet(self)
 
 
-# ======= Basic facility components
+# ======= Basic facility components (units)
 
 @dataclass    
 class BillOfMaterials:
@@ -206,7 +208,7 @@ class DistributionUnit(Agent):
     @dataclass 
     class Economy:
         unit_price: int = 0
-        checkin_balance: int = 0  # balance for the current time step
+        order_checkin: int = 0  # balance for the current time step
             
         def profit(self, units_sold):
             return self.unit_price * units_sold
@@ -225,6 +227,7 @@ class DistributionUnit(Agent):
         destination: Cell
         product_id: str
         quantity: int
+        unit_price: int = 0
     
     def __init__(self, facility, fleet_size, transport_economy):
         self.facility = facility
@@ -234,29 +237,29 @@ class DistributionUnit(Agent):
         
     def place_order(self, order):
         if order.quantity > 0:
+            order.unit_price = self.economy.unit_price
             self.order_queue.append(order)   # add order to the queue
-            profit = self.economy.profit(order.quantity)
-            self.economy.checkin_balance += profit
-            return -profit
+            order_total = self.economy.profit(order.quantity)
+            self.economy.order_checkin += order_total
+            return -order_total
         else:
             return 0
             
     def act(self, control):
         self.economy.unit_price = control.unit_price    # update unit price
         
-        loss = BalanceSheet()
-        if len(self.order_queue) > 0: 
-            for vechicle in self.fleet:
-                if not vechicle.is_enroute():
-                    order = self.order_queue.popleft()
-                    vechicle.schedule( self.facility.world, order.destination, order.product_id, order.quantity )
-                    loss -= vechicle.act(None)
-                else:
-                    loss -= vechicle.act(None)
+        transportation_balance = BalanceSheet()
+        for vechicle in self.fleet:
+            if len(self.order_queue) > 0 and not vechicle.is_enroute():
+                order = self.order_queue.popleft()
+                vechicle.schedule( self.facility.world, order.destination, order.product_id, order.quantity )
+                transportation_balance -= vechicle.act(None)
+            else:
+                transportation_balance -= vechicle.act(None)
         
-        profit = self.economy.checkin_balance
-        self.economy.checkin_balance = 0
-        return BalanceSheet(profit, 0) + loss
+        step_profit = self.economy.order_checkin
+        self.economy.order_checkin = 0
+        return BalanceSheet(step_profit, 0) + transportation_balance
 
     
 class ManufacturingUnit:
@@ -316,24 +319,33 @@ class ConsumerUnit:
         self.facility = facility
         self.sources = sources
         self.open_orders = {}
-        for s in self.sources:
-            self.open_orders[s.id] = Counter()
         self.economy = ConsumerUnit.Economy()
-        
+    
     def on_order_reception(self, source_id, product_id, quantity):
         self.economy.total_units_received += quantity
-        self.open_orders[source_id][product_id] -= quantity
+        self._update_open_orders(source_id, product_id, -quantity)
     
     def act(self, control):
         if control.consumer_product_id is None or control.consumer_quantity <= 0:
             return BalanceSheet()
         
         source_obj = self.sources[control.consumer_source_id]
-        self.open_orders[source_obj.id][control.consumer_product_id] += control.consumer_quantity
+        self._update_open_orders(source_obj.id, control.consumer_product_id, control.consumer_quantity)
         order = DistributionUnit.Order(self.facility, control.consumer_product_id, control.consumer_quantity)
         order_cost = source_obj.distribution.place_order( order )
         self.economy.total_units_purchased += control.consumer_quantity
         return BalanceSheet(0, order_cost)
+    
+    def _update_open_orders(self, source_id, product_id, qty_delta):
+        if qty_delta > 0:
+            if source_id not in self.open_orders:
+                self.open_orders[source_id] = Counter()
+            self.open_orders[source_id][product_id] += qty_delta
+        else:
+            self.open_orders[source_id][product_id] -= qty_delta
+            self.open_orders[source_id] += Counter() # remove zeros
+            if len(self.open_orders[source_id]) == 0:
+                del self.open_orders
         
     
 class SellerUnit:
@@ -341,6 +353,7 @@ class SellerUnit:
     class Economy:
         price_demand_intercept: int
         price_demand_slope: int
+        unit_price: int = 0
         total_units_sold: int = 0
             
         def market_demand(self, unit_price):
@@ -350,7 +363,7 @@ class SellerUnit:
             return units_sold * unit_price
         
         def step_balance_sheet(self, units_sold, unit_price):
-            return BalanceSheet(0, self.profit(units_sold, unit_price))
+            return BalanceSheet(self.profit(units_sold, unit_price), 0)
         
     @dataclass
     class Config:
@@ -359,19 +372,22 @@ class SellerUnit:
     
     @dataclass
     class Control:
-        end_unit_price: int
+        unit_price: int
             
     def __init__(self, facility, economy):
         self.facility = facility
         self.economy = economy 
             
     def act(self, control):
+        self.economy.unit_price = control.unit_price   # update the current unit price
+        
         product_id = self.facility.bom.output_product_id
-        demand = self.economy.market_demand(control.end_unit_price)
+        demand = self.economy.market_demand(control.unit_price)
         sold_qty = self.facility.storage.take_available(product_id, demand)
         self.economy.total_units_sold += sold_qty
-        return self.economy.step_balance_sheet( sold_qty, control.end_unit_price )
+        return self.economy.step_balance_sheet( sold_qty, control.unit_price )
 
+# ======= Base facility class (collection of units)
 
 class FacilityCell(Cell, Agent):
     @dataclass
@@ -404,7 +420,7 @@ class FacilityCell(Cell, Agent):
     
     def __init__(self, x, y, world, config, economy_config):  
         super(FacilityCell, self).__init__(x, y)
-        self.id = f"{self.__class__.__name__}_{id(self)}"
+        self.id = f"{self.__class__.__name__}_{world.generate_id()}"
         self.world = world
         self.economy = FacilityCell.Economy(BalanceSheet(economy_config.initial_balance, 0))
         self.bom = config.bill_of_materials
@@ -491,6 +507,11 @@ class World:
         self.grid = None
         self.economy = World.Economy(self)
         self.facilities = dict()
+        self.id_counter = 0
+        
+    def generate_id(self):
+        self.id_counter += 1
+        return self.id_counter
         
     def act(self, control):
         balance_sheets = dict()
@@ -549,8 +570,8 @@ class WorldBuilder:
                                        unit_transport_cost = 1,
                                        sources = sources,
                                        unit_manufacturing_cost = 100,
-                                       price_demand_intercept = 20,
-                                       price_demand_slope = 0.01)
+                                       price_demand_intercept = 50,
+                                       price_demand_slope = 0.002)
         
         def default_economy_config(initial_balance = 1000):
             return FacilityCell.EconomyConfig(initial_balance)
@@ -640,7 +661,6 @@ class SimpleControlPolicy:
         def default_facility_control(unit_price, product_id, source_id):
             return FacilityCell.Control(
                 unit_price = unit_price,
-                end_unit_price = 500,
                 production_rate = 5,
                 consumer_product_id = product_id,
                 consumer_source_id = source_id,
@@ -649,28 +669,28 @@ class SimpleControlPolicy:
         
         ctrl = dict()
         for f in world.get_facilities(RawMaterialsFactoryCell):
-            ctrl[f.id] = default_facility_control(200, None, None)
+            ctrl[f.id] = default_facility_control(300, None, None)
         
         for f in world.get_facilities(ValueAddFactoryCell):
-            ctrl[f.id] = default_facility_control(300, *self.find_source(f))
+            ctrl[f.id] = default_facility_control(500, *self._find_source(f))
             
         for f in world.get_facilities(WarehouseCell):
-            ctrl[f.id] = default_facility_control(400, *self.find_source(f))
+            ctrl[f.id] = default_facility_control(700, *self._find_source(f))
             
         for f in world.get_facilities(RetailerCell):
-            ctrl[f.id] = default_facility_control(None, *self.find_source(f))
+            ctrl[f.id] = default_facility_control(800, *self._find_source(f))
             
         return World.Control(ctrl)
     
-    def find_source(self, facility):
+    def _find_source(self, facility):
         # do not place orders when the facility ran out of money
         if facility.economy.total_balance.total() <= 0: 
             return (None, None)
             
         inputs = facility.bom.inputs
         available_inventory = facility.storage.stock_levels
-        inflight_orders = sum(facility.consumer.open_orders.values(), Counter())
-        booked_inventory = available_inventory + inflight_orders
+        in_transit_orders = sum(facility.consumer.open_orders.values(), Counter())
+        booked_inventory = available_inventory + in_transit_orders
         
         most_neeed_product_id = None
         min_ratio = float('inf')

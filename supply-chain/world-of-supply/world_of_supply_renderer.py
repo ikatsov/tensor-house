@@ -25,7 +25,6 @@ class Utils:
 class WorldRenderer:
     def plot_sequence_images(image_array):
         ''' Display images sequence as an animation in jupyter notebook
-    
         Args:
         image_array(numpy.ndarray): image_array.shape equal to (num_images, height, width, num_channels)
         '''
@@ -40,6 +39,7 @@ class WorldRenderer:
 
         anim = animation.FuncAnimation(fig, animate, frames=len(image_array), interval=200, repeat_delay=1, repeat=True)
         display(HTML(anim.to_html5_video()))
+        
 
 class AsciiWorldStatusPrinter():
     
@@ -60,13 +60,12 @@ class AsciiWorldStatusPrinter():
         
         substatuses = [f"Balance: {facility.economy.total_balance}"]
         if facility.distribution is not None:
-            substatuses.append( ["Fleet:", 
-                                [f"{v.__class__.__name__} {Utils.ascii_progress_bar(v.location_pointer, v.path_len()-1)}, payload: {v.payload}" 
-                                for v in facility.distribution.fleet]
-                              ])
+            transport_status = [ f"{AsciiWorldStatusPrinter.status(t)} {Utils.ascii_progress_bar(t.location_pointer, t.path_len()-1, 5)}" for t in facility.distribution.fleet ]
+            substatuses.append( ["Fleet:", transport_status] )
             q = facility.distribution.order_queue
-            inbound_orders = [ f"{order.product_id}:{order.quantity} -> {order.destination.id}" for order in q]
+            inbound_orders = [ f"{order.product_id}:{order.quantity} at ${order.unit_price} -> {order.destination.id}" for order in q]
             substatuses.append( [f"Inbound orders:", inbound_orders] )
+            substatuses.append( [f"Current unit price: {facility.distribution.economy.unit_price}"] )
             
         if facility.consumer is not None:
             outbound_orders = [ f"{src} -> {AsciiWorldStatusPrinter.counter(order)}" for src, order in facility.consumer.open_orders.items()]
@@ -76,9 +75,27 @@ class AsciiWorldStatusPrinter():
             
         if facility.seller is not None:
             substatuses.append( [f"Total units sold: {facility.seller.economy.total_units_sold}"] )
+            substatuses.append( [f"Current unit price: {facility.seller.economy.unit_price}"] )
+            
         
         substatuses.append(["Storage:", AsciiWorldStatusPrinter.status(facility.storage) ])
         status.append(substatuses)
+        return status
+    
+    @dispatch(ws.Transport)
+    def status(t: ws.Transport) -> str:
+        status = None
+        if t.destination is None:
+            status = "IDLE"
+        else:
+            if t.location_pointer == 0 and t.payload == 0:
+                status = f"LOAD {t.product_id}:{t.requested_quantity} -> {t.destination.id}"
+            if t.payload > 0 and t.step > 0:
+                status = f"MOVE {t.product_id}:{t.payload} -> {t.destination.id}"
+            if t.location_pointer == len(t.path) - 1 and t.payload > 0:
+                status = f"UNLD {t.product_id}:{t.payload} -> {t.destination.id}"
+            if t.step < 0:
+                status = f"BACK {t.destination.id} -> home" 
         return status
     
     @dispatch(ws.StorageUnit)
