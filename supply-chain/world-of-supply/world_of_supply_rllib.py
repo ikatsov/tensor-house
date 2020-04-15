@@ -40,19 +40,16 @@ class WorldOfSupplyEnv(MultiAgentEnv):
                 self.facility_types[facility_class] = facility_class_id
                 facility_class_id += 1
                          
-        self.action_space_dict = OrderedDict({ 
-            'unit_price': (0, 1000),
-            'production_rate': (0, 10),
-            'consumer_product_id': (0, len(self.product_ids)),
-            'consumer_source_id': (0, self.max_sources_per_facility),
-            'consumer_quantity': (0, 10) })
-        
-        #for i_source in range(self.max_sources_per_facility):
-        #    for i_product in range(len(self.product_ids)):
-        #        self.action_space_dict[f"consumer_{i_source}_{i_product}"] = (0, 10)
+        self.action_space_boxes = [ 
+            (0, 1000),       # unit_price
+            (0, 10)          # production_rate
+        ] 
+        for i_source in range(self.max_sources_per_facility):
+            for i_product in range(len(self.product_ids)):
+                self.action_space_boxes.append( (0, 10) )
                 
-        action_low  = [ dim[0] for dim in self.action_space_dict.values() ]
-        action_high = [ dim[1] for dim in self.action_space_dict.values() ]
+        action_low  = [ dim[0] for dim in self.action_space_boxes ]
+        action_high = [ dim[1] for dim in self.action_space_boxes ]
         self.action_space = Box(low=np.array(action_low), high=np.array(action_high), dtype=np.float32)
                 
         example_state, _ = self._world_to_state(self.reference_world)
@@ -103,27 +100,32 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         return ws.World.Control(facility_controls = controls)
     
     def _action_to_control(self, action, facility):
+        qty_max = 0
+        source_max = 0
+        product_max = 0
+        
+        if facility.consumer is not None:
+            n_products = len(self.product_ids)
+            n_facilities = len(facility.consumer.sources)
+            consumer_action_offset = 2
+            for i_source in range(n_facilities):
+                for i_product in range(n_products):
+                    i = consumer_action_offset + i_source*n_products + i_product
+                    qty = self._float_to_int(action[i], i)
+                    if qty > qty_max: 
+                        source_max, product_max, qty_max = i_source, i_product, qty 
+        
         return ws.FacilityCell.Control(
-                unit_price = self._float_to_int(action[0], 'unit_price'),
-                production_rate = self._float_to_int(action[1], 'production_rate'),
-                consumer_product_id = self._float_to_product_id(action[2]),
-                consumer_source_id = self._float_to_source_id(action[3], facility),
-                consumer_quantity = self._float_to_int(action[4], 'consumer_quantity')
+                unit_price = self._float_to_int(action[0], 0),
+                production_rate = self._float_to_int(action[1], 1),
+                consumer_product_id = self.product_ids[product_max],
+                consumer_source_id = source_max,
+                consumer_quantity = qty_max
             )
     
     def _float_to_int(self, x, box_key):
-        box = self.action_space_dict[box_key]
+        box = self.action_space_boxes[box_key]
         return int( np.clip(round(x), a_min = box[0], a_max = box[1]) )
-    
-    def _float_to_product_id(self, x):
-        pointer = int( np.clip(x, a_min = 0, a_max = len(self.product_ids) - 1) )
-        return self.product_ids[ pointer ]
-             
-    def _float_to_source_id(self, x, facility):
-        if facility.consumer is not None:
-            sources_num = len(facility.consumer.sources)
-            return int( np.clip(x, a_min = 0, a_max = sources_num - 1) )
-        return 0
              
     def _world_to_state(self, world):
         state = {}
@@ -230,7 +232,8 @@ class SimplePolicy(Policy):
         for f_class, f_id in facility_types.items():
             self.unit_prices[ f_id ] = unit_price_map[f_class]
         
-        self.number_of_products = config['number_of_products']
+        self.n_products = config['number_of_products']
+        self.n_sources = config['number_of_sources']
 
     def compute_actions(self,
                         obs_batch,
@@ -243,6 +246,7 @@ class SimplePolicy(Policy):
         
         if info_batch is None:
             return [ self._action(f_state, None) for f_state in obs_batch ], [], {}
+        
         return [self._action(f_state, f_state_info) for f_state, f_state_info in zip(obs_batch, info_batch)], [], {}
     
     def learn_on_batch(self, samples):
@@ -255,15 +259,21 @@ class SimplePolicy(Policy):
     def set_weights(self, weights):
         pass
     
+    def get_config_from_env(env):
+        return {'facility_types': env.facility_types, 
+                'number_of_products': env.n_products(),
+                'number_of_sources': env.max_sources_per_facility}
+        
     def _action(self, facility_state, facility_state_info):
-        def default_facility_control(unit_price, product_id, source_id, order_qty = 5):
-            return [
+        def default_facility_control(unit_price, source_id, product_id, order_qty = 5):
+            control = [
                 unit_price,    # unit_price
-                5,             # production_rate
-                product_id,    # consumer_product_id
-                source_id,     # consumer_source_id
-                order_qty      # consumer_quantity
+                5              # production_rate
             ]
+            consumer_control = [0] * (self.n_sources * self.n_products) 
+            consumer_control[ source_id*self.n_sources + product_id ] = order_qty
+            return control + consumer_control
+           
         
         action = default_facility_control(0, 0, 0, 0)
         if facility_state_info is not None and len(facility_state_info) > 0:   
@@ -282,7 +292,7 @@ class SimplePolicy(Policy):
             
         inputs = f_state_info['bom_inputs']
         available_inventory = f_state_info['storage_levels']
-        inflight_orders = np.sum(np.reshape(f_state_info['consumer_in_transit_orders'], (self.number_of_products, -1)), axis=0)
+        inflight_orders = np.sum(np.reshape(f_state_info['consumer_in_transit_orders'], (self.n_products, -1)), axis=0)
         booked_inventory = available_inventory + inflight_orders
         
         most_neeed_product_id = None
@@ -295,11 +305,10 @@ class SimplePolicy(Policy):
                     most_neeed_product_id = product_id
         
         exporting_sources = []
-        n_facilities = int(len(f_state_info['consumer_source_export_mask']) / self.number_of_products)
         if most_neeed_product_id is not None:
-            for i in range(n_facilities):
-                if f_state_info['consumer_source_export_mask'][i*n_facilities + most_neeed_product_id] == 1:
+            for i in range(self.n_sources):
+                if f_state_info['consumer_source_export_mask'][i*self.n_sources + most_neeed_product_id] == 1:
                     exporting_sources.append(i) 
                     
-        return (most_neeed_product_id, rnd.choice(exporting_sources))
+        return (rnd.choice(exporting_sources), most_neeed_product_id)
             

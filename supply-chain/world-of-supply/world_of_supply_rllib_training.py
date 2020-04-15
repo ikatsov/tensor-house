@@ -40,10 +40,7 @@ base_trainer_config = {
 # Policy Configuration ===============================================================================
 
 policies = {
-        'baseline': (wsr.SimplePolicy, env.observation_space, env.action_space, {
-            'facility_types': env.facility_types, 
-            'number_of_products': env.n_products()
-        }),
+        'baseline': (wsr.SimplePolicy, env.observation_space, env.action_space, wsr.SimplePolicy.get_config_from_env(env)),
         'ppo': (PPOTFPolicy, env.observation_space, env.action_space, {
             # == LSTM ==
             "use_lstm": True,
