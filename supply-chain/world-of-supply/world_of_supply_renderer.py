@@ -45,7 +45,7 @@ class AsciiWorldStatusPrinter():
     
     @dispatch(ws.World)
     def status(world: ws.World) -> list:
-        status = [ ["World:", [f"Global balance: {world.economy.global_balance()}"]] ]
+        status = [ ["World:", [f"Time step: {world.time_step}", f"Global balance: {world.economy.global_balance()}"]] ]
         for f in world.facilities.values():
             status.append(AsciiWorldStatusPrinter.status(f))    
             
@@ -65,17 +65,19 @@ class AsciiWorldStatusPrinter():
             q = facility.distribution.order_queue
             inbound_orders = [ f"{order.product_id}:{order.quantity} at ${order.unit_price} -> {order.destination.id}" for order in q]
             substatuses.append( [f"Inbound orders:", inbound_orders] )
-            substatuses.append( [f"Current unit price: {facility.distribution.economy.unit_price}"] )
+            substatuses.append( [f"Current unit price: ${facility.distribution.economy.unit_price}"] )
             
         if facility.consumer is not None:
+            in_transit_units_total = sum(sum(facility.consumer.open_orders.values(), Counter()).values())
             outbound_orders = [ f"{src} -> {AsciiWorldStatusPrinter.counter(order)}" for src, order in facility.consumer.open_orders.items()]
-            substatuses.append( [f"Outbound orders:", outbound_orders] )
+            substatuses.append( [f"Outbound orders ({in_transit_units_total} units):", outbound_orders] )
             substatuses.append( [f"Total units purchased: {facility.consumer.economy.total_units_purchased}"] )
             substatuses.append( [f"Total units received: {facility.consumer.economy.total_units_received}"] )
             
         if facility.seller is not None:
+            substatuses.append( [f"Current unit price: ${facility.seller.economy.unit_price}"] )
+            substatuses.append( [f"Current demand: {facility.seller.economy.market_demand(facility.seller.economy.unit_price)}"] )
             substatuses.append( [f"Total units sold: {facility.seller.economy.total_units_sold}"] )
-            substatuses.append( [f"Current unit price: {facility.seller.economy.unit_price}"] )
             
         
         substatuses.append(["Storage:", AsciiWorldStatusPrinter.status(facility.storage) ])
@@ -94,7 +96,7 @@ class AsciiWorldStatusPrinter():
                 status = f"MOVE {t.product_id}:{t.payload} -> {t.destination.id}"
             if t.location_pointer == len(t.path) - 1 and t.payload > 0:
                 status = f"UNLD {t.product_id}:{t.payload} -> {t.destination.id}"
-            if t.step < 0:
+            if t.step < 0 and t.payload == 0:
                 status = f"BACK {t.destination.id} -> home" 
         return status
     

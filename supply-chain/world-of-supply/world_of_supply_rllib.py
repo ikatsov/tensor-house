@@ -3,16 +3,51 @@ import copy
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.rllib.policy.policy import Policy
 from ray.rllib.agents.ppo.ppo_tf_policy import PPOTFPolicy
+import yaml
 
-from gym.spaces import Box
+from gym.spaces import Box, Tuple, MultiDiscrete, Discrete
 import numpy as np
 from pprint import pprint
 from collections import OrderedDict 
 from dataclasses import dataclass
 import random as rnd
 import statistics
+from itertools import chain
 
 import world_of_supply_environment as ws
+
+class RewardCalculator:
+    
+    def __init__(self, env_config):
+        self.env_config = env_config
+    
+    def calculate_reward(self, world, step_outcome):
+        return self._weighted_profit(world, step_outcome)
+    
+    def _retailer_profit(self, world, step_outcome):
+        retailer_revenue = { f_id: sheet.profit for f_id, sheet in step_outcome.facility_step_balance_sheets.items() if "Retailer" in f_id}
+        global_reward = statistics.mean( retailer_revenue.values() )
+        w = self.env_config['global_reward_weight']
+        return { f_id: w * global_reward + (1 - w) * sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items() }
+    
+    def _weighted_profit(self, world, step_outcome):
+        totals = { f_id: sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items()}
+        mean_total = statistics.mean( totals.values() )
+        w = self.env_config['global_reward_weight']
+        return { f_id: w * mean_total + (1 - w) * total for f_id, total in totals.items() }
+    
+    def _inventory_movement(self, world, step_outcome):
+        old_inventory = self.inventory_per_facility
+        self.inventory_per_facility = self._get_inventory_per_facility(self.world)
+        inventory_movement = {k: abs(old_inventory[k] - self.inventory_per_facility[k]) for k in self.inventory_per_facility.keys() }
+        return inventory_movement
+    
+    def _transport_movement(self, world, step_outcome):
+        old_pointers = self.transport_pointers
+        self.transport_pointers = self._get_transport_pointers(self.world)
+        pointers_movement = {k: abs(old_pointers[k] - self.transport_pointers[k]) for k in self.transport_pointers.keys() }
+        return pointers_movement
+        
 
 class WorldOfSupplyEnv(MultiAgentEnv):
     
@@ -20,6 +55,7 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         self.env_config = env_config
         self.reference_world = ws.WorldBuilder.create(80, 16)
         self.product_ids = self._product_ids()
+        self.reward_calculator = RewardCalculator(env_config)
         
         self.max_sources_per_facility = 0
         self.max_fleet_size = 0
@@ -40,25 +76,28 @@ class WorldOfSupplyEnv(MultiAgentEnv):
                 self.facility_types[facility_class] = facility_class_id
                 facility_class_id += 1
                          
-        self.action_space_boxes = [ 
-            (0, 1000),       # unit_price
-            (0, 10)          # production_rate
-        ] 
-        for i_source in range(self.max_sources_per_facility):
-            for i_product in range(len(self.product_ids)):
-                self.action_space_boxes.append( (0, 10) )
-                
-        action_low  = [ dim[0] for dim in self.action_space_boxes ]
-        action_high = [ dim[1] for dim in self.action_space_boxes ]
-        self.action_space = Box(low=np.array(action_low), high=np.array(action_high), dtype=np.float32)
+        self.action_space = Tuple([ 
+            Discrete(8), # unit price increment/decrement level
+            Discrete(5), # production rate level
+            #Box(low=0, high=2000, shape=(1,), dtype=np.int64),
+            #Box(low=0, high=20, shape=(1,), dtype=np.int64),
+            Discrete(self.n_products()), # consumer product id
+            Discrete(self.max_sources_per_facility), # consumer source id
+            Discrete(5)  # consumer_quantity
+        ])
                 
         example_state, _ = self._world_to_state(self.reference_world)
         state_dim = len(list(example_state.values())[0])
-        self.observation_space = Box(low=-1.0, high=2.0, shape=(state_dim, ), dtype=np.float32)
+        self.observation_space = Box(low=-1.0, high=1.0, shape=(state_dim, ), dtype=np.float32)
+        
+        status = ["Inialized WorldOfSupply", [f"Action space: {self.action_space}", f"Observation space: {self.observation_space}"] ]
+        print(yaml.dump(status))
 
     def reset(self):
         self.world = copy.deepcopy(self.reference_world)
         self.time_step = 0
+        self.inventory_per_facility = self._get_inventory_per_facility(self.world)
+        self.transport_pointers = self._get_transport_pointers(self.world)
         state, _ = self._world_to_state(self.world)
         return state
 
@@ -67,7 +106,7 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         
         outcome = self.world.act(control)
         
-        reward = self._outcome_to_reward(outcome)
+        reward = self.reward_calculator.calculate_reward(self.world, outcome)
         seralized_state, info_state = self._world_to_state(self.world)
         
         self.time_step += 1
@@ -76,6 +115,23 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         done['__all__'] = is_done
         
         return seralized_state, reward, done, info_state
+    
+    def _get_inventory_per_facility(self, world):
+        units_per_facility = {}
+        for facility in world.facilities.values():
+            if facility.storage is not None:
+                units_per_facility[facility.id] = sum(facility.storage.stock_levels.values())
+        return units_per_facility
+    
+    def _get_transport_pointers(self, world):
+        pointers = {}
+        for facility in world.facilities.values():
+            if facility.distribution is not None:
+                for t in facility.distribution.fleet:
+                    pointers[facility.id] = t.location_pointer
+            else:
+                pointers[facility.id] = 0
+        return pointers
     
     def n_products(self):
         return len(self._product_ids())
@@ -87,12 +143,6 @@ class WorldOfSupplyEnv(MultiAgentEnv):
             product_ids.update(f.bom.inputs.keys())
         return list(product_ids)
     
-    def _outcome_to_reward(self, outcome):
-        totals = { f_id: sheet.total() for f_id, sheet in outcome.facility_step_balance_sheets.items() }
-        mean_total = statistics.mean( totals.values() )
-        w = self.env_config['global_reward_weight']
-        return { f_id: w * mean_total + (1 - w) * total for f_id, total in totals.items() }
-    
     def _action_dictionary_to_control(self, action_dict):
         controls = {}
         for facility_id, action in action_dict.items():
@@ -100,27 +150,38 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         return ws.World.Control(facility_controls = controls)
     
     def _action_to_control(self, action, facility):
-        qty_max = 0
-        source_max = 0
-        product_max = 0
+                 
+        unit_price_mapping = {
+            0: 400, 
+            1: 600,
+            2: 800,
+            3: 1000,
+            4: 1200,
+            5: 1400,
+            6: 1600,
+            7: 1800
+        }
         
-        if facility.consumer is not None:
-            n_products = len(self.product_ids)
-            n_facilities = len(facility.consumer.sources)
-            consumer_action_offset = 2
-            for i_source in range(n_facilities):
-                for i_product in range(n_products):
-                    i = consumer_action_offset + i_source*n_products + i_product
-                    qty = self._float_to_int(action[i], i)
-                    if qty > qty_max: 
-                        source_max, product_max, qty_max = i_source, i_product, qty 
+        small_controls_mapping = {
+            0: 0,
+            1: 2,
+            2: 4,
+            3: 6,
+            4: 8
+        }
+        
+        n_facility_sources = len(facility.consumer.sources) if facility.consumer is not None else 0
+        
+        action = np.array(action).flatten()
         
         return ws.FacilityCell.Control(
-                unit_price = self._float_to_int(action[0], 0),
-                production_rate = self._float_to_int(action[1], 1),
-                consumer_product_id = self.product_ids[product_max],
-                consumer_source_id = source_max,
-                consumer_quantity = qty_max
+                unit_price = unit_price_mapping[ action[0] ],
+                production_rate = small_controls_mapping[ action[1] ],   
+                #unit_price = int(action[0]) ,
+                #production_rate = int(action[1]) ,
+                consumer_product_id = self.product_ids[ action[2] ],                    
+                consumer_source_id = min(action[3], n_facility_sources-1),
+                consumer_quantity = small_controls_mapping[ action[4] ]
             )
     
     def _float_to_int(self, x, box_key):
@@ -131,6 +192,8 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         state = {}
         for facility_id, facility in world.facilities.items():
             state[facility_id] = self._state(facility)  
+            self._add_global_features(state[facility_id], world)
+            
         return self._serialize_state(state), state  
     
     def _state(self, facility: ws.FacilityCell):
@@ -140,23 +203,30 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         facility_type[self.facility_types[facility.__class__.__name__]] = 1
         state['facility_type'] = facility_type
         
-        state['balance'] = facility.economy.total_balance.total() / 1000
+        state['balance'] = self._balance_norm( facility.economy.total_balance.total() )
              
         self._add_bom_features(state, facility)
-        #self._add_distributor_features(state, facility)
+        ##self._add_distributor_features(state, facility)
         self._add_consumer_features(state, facility)
                         
         state['sold_units'] = 0
         if facility.seller is not None:
             state['sold_units'] = facility.seller.economy.total_units_sold
         
-        state['storage_usage'] = WorldOfSupplyEnv._safe_div( facility.storage.used_capacity(), facility.storage.max_capacity )
+        state['storage_capacity'] = facility.storage.max_capacity
         state['storage_levels'] = [0] * len(self.product_ids)     
         for i, prod_id in enumerate(self.product_ids):
             if prod_id in facility.storage.stock_levels.keys():
                  state['storage_levels'][i] = facility.storage.stock_levels[prod_id]
                     
         return state
+    
+    def _add_global_features(self, state, world):
+        state['time'] = world.time_step
+        state['balances'] = [ self._balance_norm(f.economy.total_balance.total()) for f in world.facilities.values() ]
+        
+    def _balance_norm(self, v):
+        return v/1000
     
     def _add_bom_features(self, state, facility: ws.FacilityCell):
         state['bom_inputs'] = [0] * len(self.product_ids)  
@@ -168,14 +238,14 @@ class WorldOfSupplyEnv(MultiAgentEnv):
                 state['bom_outputs'][i] = facility.bom.output_lot_size
                 
     def _add_distributor_features(self, state, facility: ws.FacilityCell):
-        state['fleet_position'] = [0] * self.max_fleet_size
-        state['fleet_payload'] = [0] * self.max_fleet_size
+        ##state['fleet_position'] = [0] * self.max_fleet_size
+        ##state['fleet_payload'] = [0] * self.max_fleet_size
         state['distributor_in_transit_orders'] = 0
         state['distributor_in_transit_orders_qty'] = 0
         if facility.distribution is not None:
-            for i, v in enumerate(facility.distribution.fleet):
-                state['fleet_position'][i] = WorldOfSupplyEnv._safe_div( v.location_pointer, v.path_len() )
-                state['fleet_payload'][i] = v.payload
+            ##for i, v in enumerate(facility.distribution.fleet):
+            ##    state['fleet_position'][i] = WorldOfSupplyEnv._safe_div( v.location_pointer, v.path_len() )
+            ##    state['fleet_payload'][i] = v.payload
             
             q = facility.distribution.order_queue
             ordered_quantity = sum([ order.quantity for order in q ])
@@ -186,13 +256,13 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         # which source exports which product
         state['consumer_source_export_mask'] = [0] * ( len(self.product_ids) * self.max_sources_per_facility )
         # provide the agent with the statuses of tier-one suppliers' inventory and in-transit orders
-        state['consumer_source_inventory'] = [0] * ( len(self.product_ids) * self.max_sources_per_facility )
+        ##state['consumer_source_inventory'] = [0] * ( len(self.product_ids) * self.max_sources_per_facility )
         state['consumer_in_transit_orders'] = [0] * ( len(self.product_ids) * self.max_sources_per_facility )
         if facility.consumer is not None:
             for i_s, source in enumerate(facility.consumer.sources):
                 for i_p, product_id in enumerate(self.product_ids):
                     i = i_s * self.max_sources_per_facility + i_p
-                    state['consumer_source_inventory'][i] = source.storage.stock_levels[product_id]  
+                    #state['consumer_source_inventory'][i] = source.storage.stock_levels[product_id]  
                     if source.bom.output_product_id == product_id:
                         state['consumer_source_export_mask'][i] = 1
                     if source.id in facility.consumer.open_orders:
@@ -222,11 +292,11 @@ class SimplePolicy(Policy):
         facility_types = config['facility_types']
         self.unit_prices = [0] * len(facility_types)
         unit_price_map = {
-            ws.SteelFactoryCell.__name__: 300,
-            ws.LumberFactoryCell.__name__: 300,
-            ws.ToyFactoryCell.__name__: 500,
-            ws.WarehouseCell.__name__: 700,
-            ws.RetailerCell.__name__: 800
+            ws.SteelFactoryCell.__name__: 0, #400
+            ws.LumberFactoryCell.__name__: 0, #400
+            ws.ToyFactoryCell.__name__: 3, #1000
+            ws.WarehouseCell.__name__: 4, # 1200
+            ws.RetailerCell.__name__: 6 #1600
         }
 
         for f_class, f_id in facility_types.items():
@@ -265,16 +335,16 @@ class SimplePolicy(Policy):
                 'number_of_sources': env.max_sources_per_facility}
         
     def _action(self, facility_state, facility_state_info):
-        def default_facility_control(unit_price, source_id, product_id, order_qty = 5):
+        def default_facility_control(unit_price, source_id, product_id, order_qty = 2):
             control = [
                 unit_price,    # unit_price
-                5              # production_rate
+                2,             # production_rate
+                product_id,
+                source_id,
+                order_qty
             ]
-            consumer_control = [0] * (self.n_sources * self.n_products) 
-            consumer_control[ source_id*self.n_sources + product_id ] = order_qty
-            return control + consumer_control
-           
-        
+            return control
+                   
         action = default_facility_control(0, 0, 0, 0)
         if facility_state_info is not None and len(facility_state_info) > 0:   
             unit_price = self.unit_prices[ np.flatnonzero( facility_state_info['facility_type'] )[0] ]
@@ -283,10 +353,10 @@ class SimplePolicy(Policy):
             else:
                 action = default_facility_control(unit_price, 0, 0, 0)
         
-        return action 
+        return action
     
     def _find_source(self, f_state_info):
-        # do not place orders when the facility ran out of money
+        # stop placing orders when the facility ran out of money
         if f_state_info['balance'] <= 0: 
             return (0, 0, 0)
             
@@ -294,6 +364,10 @@ class SimplePolicy(Policy):
         available_inventory = f_state_info['storage_levels']
         inflight_orders = np.sum(np.reshape(f_state_info['consumer_in_transit_orders'], (self.n_products, -1)), axis=0)
         booked_inventory = available_inventory + inflight_orders
+        
+        # stop placing orders when the facilty runs out of capacity
+        if sum(booked_inventory) > f_state_info['storage_capacity']:
+            return (0, 0, 0)
         
         most_neeed_product_id = None
         min_ratio = float('inf')
@@ -311,4 +385,3 @@ class SimplePolicy(Policy):
                     exporting_sources.append(i) 
                     
         return (rnd.choice(exporting_sources), most_neeed_product_id)
-            

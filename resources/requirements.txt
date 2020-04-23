@@ -1,0 +1,28 @@
+# ========== Common ==========
+numpy
+tqdm
+functools
+pyyaml
+matplotlib
+pandas
+lz4
+
+# ========== Deep learning ==========
+torch
+torchvision
+tensorflow
+
+# ========== World of supply ==========
+networkx
+pillow
+multipledispatch
+ray
+ray[rllib]
+ray[dashboard]
+ray[tune]
+gym
+opencv-python
+dm-tree
+
+# ========== System dependencies ==========
+# apt-get install ffmpeg
