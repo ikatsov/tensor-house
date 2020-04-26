@@ -4,6 +4,7 @@ tqdm
 functools
 pyyaml
 matplotlib
+seaborn
 pandas
 lz4
 
@@ -26,3 +27,4 @@ dm-tree
 
 # ========== System dependencies ==========
 # apt-get install ffmpeg
+# pip install -U pip # ensure pip>=20.0

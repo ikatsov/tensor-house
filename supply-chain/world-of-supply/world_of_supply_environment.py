@@ -16,7 +16,7 @@ class Cell(ABC):
     def __repr__(self):
         return f"{self.__class__.__name__} ({self.x}, {self.y})"
     
-class Agent:
+class Agent(ABC):
     def act(self, control):
         pass
     
@@ -209,7 +209,11 @@ class DistributionUnit(Agent):
     class Economy:
         unit_price: int = 0
         wrong_order_penatly: int = 0
+        pending_order_penalty: int = 0
         order_checkin: int = 0  # balance for the current time step
+            
+        total_wrong_order_penalties: int = 0
+        total_pending_order_penalties: int = 0
             
         def profit(self, units_sold):
             return self.unit_price * units_sold
@@ -219,6 +223,7 @@ class DistributionUnit(Agent):
         fleet_size: int
         unit_transport_cost: int
         wrong_order_penatly: int
+        pending_order_penalty: int
     
     @dataclass
     class Control:
@@ -231,12 +236,11 @@ class DistributionUnit(Agent):
         quantity: int
         unit_price: int = 0
     
-    def __init__(self, facility, fleet_size, wrong_order_penatly, transport_economy):
+    def __init__(self, facility, fleet_size, distribution_economy, transport_economy):
         self.facility = facility
         self.fleet = [ Transport(facility, transport_economy) for i in range(fleet_size) ]
         self.order_queue = deque()
-        self.wrong_order_penatly = wrong_order_penatly
-        self.economy = DistributionUnit.Economy()
+        self.economy = distribution_economy
         
     def place_order(self, order):
         if order.quantity > 0:
@@ -247,7 +251,9 @@ class DistributionUnit(Agent):
                 self.economy.order_checkin += order_total
                 return -order_total
             else:
-                return -self.wrong_order_penatly * order.quantity
+                penalty = -self.economy.wrong_order_penatly * order.quantity
+                self.economy.total_wrong_order_penalties += penalty
+                return -self.economy.wrong_order_penatly * order.quantity
         else:
             return 0
             
@@ -264,12 +270,14 @@ class DistributionUnit(Agent):
             else:
                 transportation_balance -= vechicle.act(None)
         
-        step_profit = self.economy.order_checkin
+        pending_orders_loss = - self.economy.pending_order_penalty * len(self.order_queue)
+        self.economy.total_pending_order_penalties += pending_orders_loss
+        order_step_profit = self.economy.order_checkin
         self.economy.order_checkin = 0
-        return BalanceSheet(step_profit, 0) + transportation_balance
+        return BalanceSheet(order_step_profit, pending_orders_loss) + transportation_balance
 
     
-class ManufacturingUnit:
+class ManufacturingUnit(Agent):
     @dataclass 
     class Economy:
         unit_cost: int                   # production cost per unit 
@@ -307,7 +315,7 @@ class ManufacturingUnit:
         return self.economy.step_balance_sheet(units_produced)  
 
     
-class ConsumerUnit:
+class ConsumerUnit(Agent):
     
     @dataclass
     class Economy:
@@ -358,7 +366,7 @@ class ConsumerUnit:
                 del self.open_orders[source_id]
         
     
-class SellerUnit:
+class SellerUnit(Agent):
     @dataclass
     class Economy:
         price_demand_intercept: int
@@ -449,12 +457,20 @@ class FacilityCell(Cell, Agent):
 
 # ======= Concrete facility classes
 
+def create_distribution_unit(facility, config):
+    return DistributionUnit(facility, 
+                            config.fleet_size, 
+                            DistributionUnit.Economy(
+                                wrong_order_penatly = config.wrong_order_penatly, 
+                                pending_order_penalty = config.pending_order_penalty), 
+                            Transport.Economy(config.unit_transport_cost))
+
 class RawMaterialsFactoryCell(FacilityCell):
     def __init__(self, x, y, world, config, economy_config):
         super(RawMaterialsFactoryCell, self).__init__(x, y, world, config, economy_config) 
         self.storage = StorageUnit(config.max_storage_capacity, StorageUnit.Economy(config.unit_storage_cost))
         self.manufacturing = ManufacturingUnit(self, ManufacturingUnit.Economy(config.unit_manufacturing_cost))
-        self.distribution = DistributionUnit(self, config.fleet_size, config.wrong_order_penatly, Transport.Economy(config.unit_transport_cost))
+        self.distribution = create_distribution_unit(self, config)
         
 class SteelFactoryCell(RawMaterialsFactoryCell):
     def __init__(self, x, y, world, config, economy_config):
@@ -470,7 +486,7 @@ class ValueAddFactoryCell(FacilityCell):
         self.storage = StorageUnit(config.max_storage_capacity, StorageUnit.Economy(config.unit_storage_cost))
         self.consumer = ConsumerUnit(self, config.sources)
         self.manufacturing = ManufacturingUnit(self, ManufacturingUnit.Economy(config.unit_manufacturing_cost))
-        self.distribution = DistributionUnit(self, config.fleet_size, config.wrong_order_penatly, Transport.Economy(config.unit_transport_cost))
+        self.distribution = create_distribution_unit(self, config)
     
 class ToyFactoryCell(ValueAddFactoryCell):
     def __init__(self, x, y, world, config, economy_config):
@@ -481,7 +497,7 @@ class WarehouseCell(FacilityCell):
         super(WarehouseCell, self).__init__(x, y, world, config, economy_config) 
         self.storage = StorageUnit(config.max_storage_capacity, StorageUnit.Economy(config.unit_storage_cost))
         self.consumer = ConsumerUnit(self, config.sources)
-        self.distribution = DistributionUnit(self, config.fleet_size, config.wrong_order_penatly, Transport.Economy(config.unit_transport_cost))
+        self.distribution = create_distribution_unit(self, config)
         
 class RetailerCell(FacilityCell):
     def __init__(self, x, y, world, config, economy_config):
@@ -531,7 +547,7 @@ class World:
             balance_sheets[facility.id] = facility.act( control.facility_controls.get(facility.id) )
         
         self.time_step += 1
-        return World.StepOutcome(facility_step_balance_sheets = balance_sheets)
+        return World.StepOutcome(balance_sheets)
     
     def create_cell(self, x, y, clazz):
         self.grid[x][y] = clazz(x, y)
@@ -570,19 +586,20 @@ class World:
     
     
 class WorldBuilder:
-    def create(x, y):
+    def create(x = 80, y = 16):
         world = World(x, y)
         world.grid = [[TerrainCell(xi, yi) for yi in range(y)] for xi in range(x)]
         
         # parameters
         def default_facility_config(bom, sources):
             return FacilityCell.Config(bill_of_materials = bom, 
-                                       max_storage_capacity = 25,
+                                       max_storage_capacity = 20,
                                        unit_storage_cost = 1,
                                        fleet_size = 1,
                                        unit_transport_cost = 1,
                                        sources = sources,
-                                       wrong_order_penatly = 100,
+                                       wrong_order_penatly = 500,
+                                       pending_order_penalty = 10,
                                        unit_manufacturing_cost = 100,
                                        price_demand_intercept = 50,
                                        price_demand_slope = 0.005)
@@ -629,9 +646,9 @@ class WorldBuilder:
             WorldBuilder.connect_cells(world, w, *factories)
             
         # final consumers
-        n_retailers = 3
+        n_retailers = 2
         retailers = []
-        for i in range(n_warehouses):
+        for i in range(n_retailers):
             r = RetailerCell(70, int(size_y_margins/(n_retailers - 1)*i + map_margin), 
                                   world, default_facility_config(retailer_bom, warehouses),
                                   default_economy_config(3000) )
@@ -654,8 +671,8 @@ class WorldBuilder:
 
         # make several attempts to find a route non-adjacent to existing roads  
         for i in range(5):
-            xi = min(x1, x2) + int(abs(x2 - x1) * rnd.uniform(0.1, 0.9))
-            if not (world.is_railroad(xi-1, y1) or world.is_railroad(xi+1, y1)):
+            xi = min(x1, x2) + int(abs(x2 - x1) * rnd.uniform(0.15, 0.85))
+            if not (world.is_railroad(xi-1, y1+step_y) or world.is_railroad(xi+1, y1+step_y)):
                 break
 
         for x in range(x1 + step_x, xi, step_x):
@@ -663,8 +680,8 @@ class WorldBuilder:
         if step_y != 0:
             for y in range(y1, y2, step_y):
                 world.create_cell(xi, y, RailroadCell) 
-            for x in range(xi, x2, step_x):
-                world.create_cell(x, y2, RailroadCell) 
+        for x in range(xi, x2, step_x):
+            world.create_cell(x, y2, RailroadCell) 
 
 
 #  ======= Baseline control policies               
@@ -675,24 +692,24 @@ class SimpleControlPolicy:
         def default_facility_control(unit_price, product_id, source_id):
             return FacilityCell.Control(
                 unit_price = unit_price,
-                production_rate = 5,
+                production_rate = 4,
                 consumer_product_id = product_id,
                 consumer_source_id = source_id,
-                consumer_quantity = 5
+                consumer_quantity = 8
             )
         
         ctrl = dict()
         for f in world.get_facilities(RawMaterialsFactoryCell):
-            ctrl[f.id] = default_facility_control(300, None, None)
+            ctrl[f.id] = default_facility_control(400, None, None)
         
         for f in world.get_facilities(ValueAddFactoryCell):
-            ctrl[f.id] = default_facility_control(500, *self._find_source(f))
+            ctrl[f.id] = default_facility_control(1000, *self._find_source(f))
             
         for f in world.get_facilities(WarehouseCell):
-            ctrl[f.id] = default_facility_control(700, *self._find_source(f))
+            ctrl[f.id] = default_facility_control(1400, *self._find_source(f))
             
         for f in world.get_facilities(RetailerCell):
-            ctrl[f.id] = default_facility_control(1000, *self._find_source(f))
+            ctrl[f.id] = default_facility_control(1800, *self._find_source(f))
             
         return World.Control(ctrl)
     

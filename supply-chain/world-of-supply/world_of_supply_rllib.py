@@ -53,7 +53,7 @@ class WorldOfSupplyEnv(MultiAgentEnv):
     
     def __init__(self, env_config):
         self.env_config = env_config
-        self.reference_world = ws.WorldBuilder.create(80, 16)
+        self.reference_world = ws.WorldBuilder.create()
         self.product_ids = self._product_ids()
         self.reward_calculator = RewardCalculator(env_config)
         
@@ -77,7 +77,7 @@ class WorldOfSupplyEnv(MultiAgentEnv):
                 facility_class_id += 1
                          
         self.action_space = Tuple([ 
-            Discrete(8), # unit price increment/decrement level
+            Discrete(8), # unit price
             Discrete(5), # production rate level
             #Box(low=0, high=2000, shape=(1,), dtype=np.int64),
             #Box(low=0, high=20, shape=(1,), dtype=np.int64),
@@ -88,13 +88,10 @@ class WorldOfSupplyEnv(MultiAgentEnv):
                 
         example_state, _ = self._world_to_state(self.reference_world)
         state_dim = len(list(example_state.values())[0])
-        self.observation_space = Box(low=-1.0, high=1.0, shape=(state_dim, ), dtype=np.float32)
-        
-        status = ["Inialized WorldOfSupply", [f"Action space: {self.action_space}", f"Observation space: {self.observation_space}"] ]
-        print(yaml.dump(status))
+        self.observation_space = Box(low=0.00, high=1.00, shape=(state_dim, ), dtype=np.float32)
 
     def reset(self):
-        self.world = copy.deepcopy(self.reference_world)
+        self.world = ws.WorldBuilder.create(80, 16) # copy.deepcopy(self.reference_world)
         self.time_step = 0
         self.inventory_per_facility = self._get_inventory_per_facility(self.world)
         self.transport_pointers = self._get_transport_pointers(self.world)
@@ -105,11 +102,21 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         control = self._action_dictionary_to_control(action_dict)
         
         outcome = self.world.act(control)
+        self.time_step += 1
         
+        # churn through no-action cycles 
+        for i in range(self.env_config['downsampling_rate'] - 1):     
+            nop_outcome = self.world.act(ws.World.Control({}))
+            self.time_step += 1
+            
+            balances = outcome.facility_step_balance_sheets
+            for f_id in balances.keys():
+                balances[f_id] = balances[f_id] + nop_outcome.facility_step_balance_sheets[f_id]
+            
         reward = self.reward_calculator.calculate_reward(self.world, outcome)
+        
         seralized_state, info_state = self._world_to_state(self.world)
         
-        self.time_step += 1
         is_done = self.time_step >= self.env_config['episod_duration']
         done = { facility_id: is_done for facility_id in self.world.facilities.keys() }
         done['__all__'] = is_done
@@ -152,14 +159,14 @@ class WorldOfSupplyEnv(MultiAgentEnv):
     def _action_to_control(self, action, facility):
                  
         unit_price_mapping = {
-            0: 400, 
+            0: 400,
             1: 600,
-            2: 800,
-            3: 1000,
-            4: 1200,
-            5: 1400,
-            6: 1600,
-            7: 1800
+            2: 1000,
+            3: 1200,
+            4: 1400,
+            5: 1600,
+            6: 1800,
+            7: 2000
         }
         
         small_controls_mapping = {
@@ -292,11 +299,11 @@ class SimplePolicy(Policy):
         facility_types = config['facility_types']
         self.unit_prices = [0] * len(facility_types)
         unit_price_map = {
-            ws.SteelFactoryCell.__name__: 0, #400
-            ws.LumberFactoryCell.__name__: 0, #400
-            ws.ToyFactoryCell.__name__: 3, #1000
-            ws.WarehouseCell.__name__: 4, # 1200
-            ws.RetailerCell.__name__: 6 #1600
+            ws.SteelFactoryCell.__name__: 0,  # 400
+            ws.LumberFactoryCell.__name__: 0, # 400
+            ws.ToyFactoryCell.__name__: 2,    # 1000
+            ws.WarehouseCell.__name__: 4,     # 1400
+            ws.RetailerCell.__name__: 6       # 1800
         }
 
         for f_class, f_id in facility_types.items():
@@ -335,10 +342,10 @@ class SimplePolicy(Policy):
                 'number_of_sources': env.max_sources_per_facility}
         
     def _action(self, facility_state, facility_state_info):
-        def default_facility_control(unit_price, source_id, product_id, order_qty = 2):
+        def default_facility_control(unit_price, source_id, product_id, order_qty = 4):  # (level 4 -> 8 units)
             control = [
                 unit_price,    # unit_price
-                2,             # production_rate
+                2,             # production_rate (level 2 -> 4 units)
                 product_id,
                 source_id,
                 order_qty

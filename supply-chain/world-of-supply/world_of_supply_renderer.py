@@ -60,12 +60,13 @@ class AsciiWorldStatusPrinter():
         
         substatuses = [f"Balance: {facility.economy.total_balance}"]
         if facility.distribution is not None:
-            transport_status = [ f"{AsciiWorldStatusPrinter.status(t)} {Utils.ascii_progress_bar(t.location_pointer, t.path_len()-1, 5)}" for t in facility.distribution.fleet ]
+            u = facility.distribution
+            transport_status = [ f"{AsciiWorldStatusPrinter.status(t)} {Utils.ascii_progress_bar(t.location_pointer, t.path_len()-1, 5)}" for t in u.fleet ]
             substatuses.append( ["Fleet:", transport_status] )
-            q = facility.distribution.order_queue
-            inbound_orders = [ f"{order.product_id}:{order.quantity} at ${order.unit_price} -> {order.destination.id}" for order in q]
+            inbound_orders = [ f"{order.product_id}:{order.quantity} at ${order.unit_price} -> {order.destination.id}" for order in u.order_queue]
             substatuses.append( [f"Inbound orders:", inbound_orders] )
-            substatuses.append( [f"Current unit price: ${facility.distribution.economy.unit_price}"] )
+            substatuses.append( [f"Current unit price: ${u.economy.unit_price}"] )
+            substatuses.append( [f"Penalties: wrong orders {u.economy.total_wrong_order_penalties}, pending orders {u.economy.total_pending_order_penalties}"] )
             
         if facility.consumer is not None:
             in_transit_units_total = sum(sum(facility.consumer.open_orders.values(), Counter()).values())
@@ -159,7 +160,6 @@ class AsciiWorldRenderer(WorldRenderer):
         margin_side = 150 
         margin_top = 20
         font = ImageFont.truetype("resources/FiraMono-Bold.ttf", 24)
-        #font = ImageFont.truetype("resources/monaco.ttf", 24)
         
         test_text = "\n".join(''.join(row) for row in ascii_layers[0])
         test_img = PIL.Image.new('RGB', (10, 10))
