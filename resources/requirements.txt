@@ -28,3 +28,7 @@ dm-tree
 # ========== System dependencies ==========
 # apt-get install ffmpeg
 # pip install -U pip # ensure pip>=20.0
+
+# ========== GPU support ==========
+# 1. Check the devise: lspci | grep -i nvidia 
+# 2. Follow the instatuction https://developer.nvidia.com/cuda-downloads

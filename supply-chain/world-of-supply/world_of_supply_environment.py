@@ -599,7 +599,7 @@ class WorldBuilder:
                                        unit_transport_cost = 1,
                                        sources = sources,
                                        wrong_order_penatly = 500,
-                                       pending_order_penalty = 10,
+                                       pending_order_penalty = 4,
                                        unit_manufacturing_cost = 100,
                                        price_demand_intercept = 50,
                                        price_demand_slope = 0.005)
@@ -649,9 +649,10 @@ class WorldBuilder:
         n_retailers = 2
         retailers = []
         for i in range(n_retailers):
+            retailer_config = default_facility_config(retailer_bom, warehouses)
+            retailer_config.max_storage_capacity = 10
             r = RetailerCell(70, int(size_y_margins/(n_retailers - 1)*i + map_margin), 
-                                  world, default_facility_config(retailer_bom, warehouses),
-                                  default_economy_config(3000) )
+                                  world, retailer_config, default_economy_config(3000) )
             world.place_cell(r)
             retailers.append(r)
             WorldBuilder.connect_cells(world, r, *warehouses)
@@ -735,10 +736,15 @@ class SimpleControlPolicy:
                 min_ratio = fulfillment_ratio
                 most_neeed_product_id = product_id
         
-        exporting_sources = []
-        if most_neeed_product_id is not None:
-            for source_id, source in enumerate(facility.consumer.sources):
-                if source.bom.output_product_id == most_neeed_product_id:
-                    exporting_sources.append(source_id)
+        exporting_sources = SimpleControlPolicy.find_exporting_sources(facility, most_neeed_product_id)
                     
         return (most_neeed_product_id, rnd.choice(exporting_sources))
+    
+    def find_exporting_sources(facility, product_id):
+        exporting_sources = []
+        if product_id is not None and facility.consumer is not None:
+            for source_id, source in enumerate(facility.consumer.sources):
+                if source.bom.output_product_id == product_id:
+                    exporting_sources.append(source_id)
+        return exporting_sources
+        
