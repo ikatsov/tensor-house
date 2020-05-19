@@ -72,8 +72,9 @@ What follows is a manually curated list of papers in modern data science and ope
 3. **[ AlbertHeijn2006 ]** Kök A., Fisher M. -- Demand Estimation and Assortment Optimization Under Substitution: Methodology and Application, 2006
 4. **[ Uber2017 ]** Zhu L., Laptev N. -- Deep and Confident Prediction for Time Series at Uber, 2017
 6. **[ Uber2017 ]** Laptev N., Yosinski J., Li L., Smyl S. -- Time-series Extreme Event Forecasting with Neural Networks at Uber, 2017
-7. Rodrigues F., Markou I., Pereira F. -- Combining Time-Series and Textual Data for Taxi Demand Prediction in Event Areas: A Deep Learning Approach, 2018
-8. Ghobbar A., Friend C. -- Evaluation of Forecasting Methods for Intermittent Parts Demand in the Field of Aviation: A Predictive Model, 2002
+7. **[ Google2013 ]** Scott S., Varian H. -- Predicting the Present with Bayesian Structural Time Series, 2013
+8. Rodrigues F., Markou I., Pereira F. -- Combining Time-Series and Textual Data for Taxi Demand Prediction in Event Areas: A Deep Learning Approach, 2018
+9. Ghobbar A., Friend C. -- Evaluation of Forecasting Methods for Intermittent Parts Demand in the Field of Aviation: A Predictive Model, 2002
 
 ### Dynamic Pricing
 1. **[ Groupon2017 ]** Cheung W., Simchi-Levi D., and Wang H. -- Dynamic Pricing and Demand Learning with Limited Price Experimentation, 2017
