@@ -120,7 +120,7 @@ What follows is a manually curated list of papers in modern data science and ope
 ### Customer Intelligence
 1. Winston W. -- Marketing Analytics: Data-Driven Techniques with Microsoft Excel, Wiley, 2014
 2. Grigsby M. -- Advanced Customer Analytics: Targeting, Valuing, Segmenting and Loyalty Techniques, Kogan Page, 2016
-3. Katsov I. -- [Introduction to Algorithmic Marketing](https://algorithmicweb.wordpress.com/), 2017
+3. [Katsov I. -- Introduction to Algorithmic Marketing, 2017](https://algorithmicweb.wordpress.com/)
 4. Falk K. -- Practical Recommender Systems, Manning, 2019
 
 ### Price Management
@@ -141,3 +141,4 @@ What follows is a manually curated list of papers in modern data science and ope
 ### Data Science and Machine Learning for Enterprise Use Cases
 1. Provost F., Fawcett T. -- Data Science for Business, O'Reilly Media, 2013
 2. Osinga D. -- Deep Learning Cookbook, O'Reilly Media, 2018
+3. [Molnar C. -- A Guide for Making Black Box Models Explainable, 2020](https://christophm.github.io/interpretable-ml-book/)
