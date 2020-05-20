@@ -21,6 +21,9 @@ DQN learns a Hi-Lo pricing policy that switches between regular and discounted p
 World Of Supply simulation environment*
 ![Price Optimization Using RL Animation](https://github.com/ikatsov/tensor-house/blob/master/resources/demo-animation-world-of-supply.gif)
 
+*Demand decomposition using Bayesian Structural Time Series*
+![Demand Decomposition Example](https://github.com/ikatsov/tensor-house/blob/master/resources/demand-decomposition-example.png)
+
 ### List of Models 
 
 * Promotions and Advertisements
