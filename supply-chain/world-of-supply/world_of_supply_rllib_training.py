@@ -23,7 +23,7 @@ import ray.rllib.env.multi_agent_env
 from gym.spaces import Box, Tuple, MultiDiscrete, Discrete
 
 from world_of_supply_rllib import Utils
-from world_of_supply_rllib_models import TowerRNN
+from world_of_supply_rllib_models import FacilityNet
 
 import ray.rllib.models as models
 
@@ -37,7 +37,8 @@ ray.init()
 
 env_config = {
     'episod_duration': 1000, 
-    'global_reward_weight': 0.75,
+    'global_reward_weight_producer': 0.90,
+    'global_reward_weight_consumer': 0.90,
     'downsampling_rate': 20
 }
 env = wsr.WorldOfSupplyEnv(env_config)
@@ -56,7 +57,7 @@ ModelCatalog.register_custom_action_dist( "consumer_action_dist", ConsumerAction
 
 base_trainer_config = {
     'env_config': env_config,
-    'timesteps_per_iteration': 10000,
+    'timesteps_per_iteration': 25000,
     
     # == Environment Settings == 
     #'lr': 0.0005,
@@ -64,7 +65,7 @@ base_trainer_config = {
     
     # === Settings for the Trainer process ===
     'train_batch_size': 2000,
-    #'batch_mode': 'complete_episodes',
+    'batch_mode': 'complete_episodes',
     'rollout_fragment_length': 50,
 }
 
@@ -72,16 +73,16 @@ ppo_policy_config_producer = {
     "model": {
         "fcnet_hiddens": [128, 128],
         
-        "custom_model": "tower_rnn",
+        #"custom_model": "facility_net",
         #"custom_action_dist": "producer_action_dist"
     }
 }
 
 ppo_policy_config_consumer = {
     "model": {
-        "fcnet_hiddens": [128, 128],
+        "fcnet_hiddens": [256, 256],
         
-        "custom_model": "tower_rnn",
+        #"custom_model": "facility_net",
         #"custom_action_dist": "consumer_action_dist"
                 
         # == LSTM ==
@@ -95,17 +96,17 @@ ppo_policy_config_consumer = {
 
 # Model Configuration ===============================================================================
 
-models.ModelCatalog.register_custom_model("tower_rnn", TowerRNN)
+models.ModelCatalog.register_custom_model("facility_net", FacilityNet)
 
 def print_model_summaries():
     config = models.MODEL_DEFAULTS.copy()
-    config.update({"custom_model": "tower_rnn"})
-    tower_rnn = models.ModelCatalog.get_model_v2(
+    config.update({"custom_model": "facility_net"})
+    facility_net = models.ModelCatalog.get_model_v2(
         obs_space = env.observation_space,
         action_space = env.action_space_consumer,
         num_outputs = 1,
         model_config = config)
-    tower_rnn.rnn_model.summary()
+    facility_net.rnn_model.summary()
 
 
 # Policy Configuration ===============================================================================
@@ -121,55 +122,47 @@ def filter_keys(d, keys):
     return {k:v for k,v in d.items() if k in keys}
 
 policy_mapping_global = {
-        'SteelFactoryCell_1p': 'ppo_producer',
-        'SteelFactoryCell_1c': 'ppo_consumer',
-        'LumberFactoryCell_2p': 'ppo_producer',
-        'LumberFactoryCell_2c': 'ppo_consumer',
+        'SteelFactoryCell_1p': 'baseline_producer',
+        'SteelFactoryCell_1c': 'baseline_consumer',
+        'LumberFactoryCell_2p': 'baseline_producer',
+        'LumberFactoryCell_2c': 'baseline_consumer',
         'ToyFactoryCell_3p': 'ppo_producer',
-        'ToyFactoryCell_3c': 'baseline_consumer',
+        'ToyFactoryCell_3c': 'ppo_consumer',
         'ToyFactoryCell_4p': 'ppo_producer',
-        'ToyFactoryCell_4c': 'baseline_consumer',
+        'ToyFactoryCell_4c': 'ppo_consumer',
         'ToyFactoryCell_5p': 'ppo_producer',
-        'ToyFactoryCell_5c': 'baseline_consumer',
-        'WarehouseCell_6p': 'ppo_producer',
+        'ToyFactoryCell_5c': 'ppo_consumer',
+        'WarehouseCell_6p': 'baseline_producer',
         'WarehouseCell_6c': 'baseline_consumer',
-        'WarehouseCell_7p': 'ppo_producer',
+        'WarehouseCell_7p': 'baseline_producer',
         'WarehouseCell_7c': 'baseline_consumer',
-        'RetailerCell_8p': 'ppo_producer',
+        'RetailerCell_8p': 'baseline_producer',
         'RetailerCell_8c': 'baseline_consumer',
-        'RetailerCell_9p': 'ppo_producer',
+        'RetailerCell_9p': 'baseline_producer',
         'RetailerCell_9c': 'baseline_consumer',
     }
 
-def update_policy_map(policy_map, i, n_iterations):
-    
-#     if i == int(n_iterations/100*20):
-#        for k in policy_map.keys():
-#            if k[-1] == 'c':
-#                policy_map[k] = 'ppo_consumer'
-#            else:
-#                policy_map[k] = 'ppo_producer'
-               
-    if i == int(n_iterations/100*20):
-        policy_map['ToyFactoryCell_3c'] = 'ppo_consumer'
+def update_policy_map(policy_map, i = 0, n_iterations = 0): # apply all changes by default
+                     
+    if i == int(n_iterations/100*25):
+        policy_map['WarehouseCell_6p'] = 'ppo_producer'
+        policy_map['WarehouseCell_6c'] = 'ppo_consumer'
         
-    if i == int(n_iterations/100*30):
-        policy_map['ToyFactoryCell_4c'] = 'ppo_consumer'
-        
-    if i == int(n_iterations/100*40):
-        policy_map['ToyFactoryCell_5c'] = 'ppo_consumer'
-        
-    if i == int(n_iterations/100*50):
+    if i == int(n_iterations/100*35):
+        policy_map['WarehouseCell_7p'] = 'ppo_producer'
         policy_map['WarehouseCell_7c'] = 'ppo_consumer'
         
-    if i == int(n_iterations/100*60):
-        policy_map['WarehouseCell_7c'] = 'ppo_consumer'
+#    if i == int(n_iterations/100*50):
+#        policy_map['WarehouseCell_7c'] = 'ppo_consumer'
         
-    if i == int(n_iterations/100*70):
-        policy_map['RetailerCell_8c'] = 'ppo_consumer'
+#    if i == int(n_iterations/100*60):
+#        policy_map['WarehouseCell_7c'] = 'ppo_consumer'
         
-    if i == int(n_iterations/100*80):
-        policy_map['RetailerCell_9c'] = 'ppo_consumer'
+#    if i == int(n_iterations/100*70):
+#        policy_map['RetailerCell_8c'] = 'ppo_consumer'
+        
+#    if i == int(n_iterations/100*80):
+#        policy_map['RetailerCell_9c'] = 'ppo_consumer'
         
     
 
@@ -223,12 +216,14 @@ def train_ppo(n_iterations):
             #"vf_clip_param": 1000.0,
             #"lr_schedule": [[0, 0.01], [100000, 0.0001]],
             "vf_share_layers": True,
-            "vf_loss_coeff": 100.00,
+            "vf_loss_coeff": 20.00,       # 20.00 is the best thus far
+            "vf_clip_param": 200.0,
+            "lr": 1e-4,
             #"use_pytorch": True,
             "multiagent": {
                 "policies": filter_keys(policies, set(policy_mapping_global.values())),
                 "policy_mapping_fn": create_policy_mapping_fn(policy_map),
-                "policies_to_train": ['ppo_producer']
+                "policies_to_train": ['ppo_producer', 'ppo_consumer']
             }
         })
     
@@ -243,14 +238,16 @@ def train_ppo(n_iterations):
         update_policy_map(policy_map, i, n_iterations)
         print(f"- policy map: {policy_map}")
         
+        ppo_trainer.workers.foreach_worker(
+            lambda ev: ev.foreach_env(
+                lambda env: env.set_iteration(i, n_iterations)))
+        
         t = time.process_time()
         result = ppo_trainer.train()
         print(f"Iteration {i} took [{(time.process_time() - t):.2f}] seconds")
         print_training_results(result)
         
     return ppo_trainer
-
-
 
 
 def train_qmix(n_iterations):
@@ -267,8 +264,6 @@ def train_qmix(n_iterations):
             }
         })
     
-    obs_space = Tuple([Box(low=0.00, high=1.00, shape=(48, ), dtype=np.float64)])
-    
     from ray.tune import register_env
     register_env(
         'grouped_world_of_supply',
@@ -276,7 +271,7 @@ def train_qmix(n_iterations):
             {
                 'group01' : list(policy_mapping_global.keys())
             },
-            obs_space=obs_space
+            obs_space=env.observation_space
         ))
     
     print(f"Environment: action space producer {env.action_space_producer}, action space consumer {env.action_space_consumer}, observation space {env.observation_space}")

@@ -6,8 +6,7 @@ import numpy as np
 
 tf = try_import_tf()
 
-class TowerRNN(RecurrentTFModelV2):
-    """Example of using the Keras functional API to define a RNN model."""
+class FacilityNet(RecurrentTFModelV2):
 
     def __init__(self,
                  obs_space,
@@ -15,8 +14,9 @@ class TowerRNN(RecurrentTFModelV2):
                  num_outputs,
                  model_config,
                  name,
-                 cell_size=32):
-        super(TowerRNN, self).__init__(obs_space, action_space, num_outputs,
+                 hiddens_size=256,
+                 cell_size=64):
+        super(FacilityNet, self).__init__(obs_space, action_space, num_outputs,
                                          model_config, name)
         self.cell_size = cell_size
 
@@ -33,13 +33,6 @@ class TowerRNN(RecurrentTFModelV2):
                 mask=tf.sequence_mask(seq_in),
                 initial_state=[state_in_h, state_in_c]
         )
-        
-        # FC tower
-        #fc1 = tf.keras.layers.Dense( 128, activation=tf.nn.relu, name="fc1" )(input_layer)
-        #fc2 = tf.keras.layers.Dense( 128, activation=tf.nn.relu, name="fc2" )(fc1)
-
-        # Postprocess LSTM output with another hidden layer and compute values
-        #merged = tf.keras.layers.Concatenate()([lstm_out, fc2])
         
         logits = tf.keras.layers.Dense(
             self.num_outputs,

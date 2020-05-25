@@ -107,9 +107,11 @@ class Transport(Agent):
             self.payload = quantity
         
     def try_unloading(self):        
-        if self.destination.storage.try_add_units({ self.product_id: self.payload }):
-            self.destination.consumer.on_order_reception(self.source.id, self.product_id, self.payload)
-            self.payload = 0
+        unloaded = self.destination.storage.try_add_units({ self.product_id: self.payload }, all_or_nothing = False)
+        if len(unloaded) > 0:
+            unloaded_units = sum(unloaded.values())
+            self.destination.consumer.on_order_reception(self.source.id, self.product_id, unloaded_units)
+            self.payload = 0     # all units that were not sucessfully unloaded will be lost
 
     def act(self, control):
         if self.step > 0: 
@@ -175,14 +177,20 @@ class StorageUnit(Agent):
     def available_capacity(self):
         return self.max_capacity - self.used_capacity()
     
-    def try_add_units(self, product_quantities):
+    def try_add_units(self, product_quantities, all_or_nothing = True) -> dict:
+        
         # validation
-        if self.available_capacity() < sum(product_quantities.values()):
-            return False
+        if all_or_nothing and self.available_capacity() < sum(product_quantities.values()):
+            return {}
+        
         # depositing
-        for p_id, q in product_quantities.items():
-            self.stock_levels[p_id] += q
-        return True
+        unloaded_quantities = {}
+        for p_id, q in product_quantities.items(): 
+            unloading_qty = min(self.available_capacity(), q)
+            self.stock_levels[p_id] += unloading_qty
+            unloaded_quantities[p_id] = unloading_qty
+            
+        return unloaded_quantities
     
     def try_take_units(self, product_quantities):
         # validation
@@ -439,7 +447,8 @@ class FacilityCell(Cell, Agent):
     
     def __init__(self, x, y, world, config, economy_config):  
         super(FacilityCell, self).__init__(x, y)
-        self.id = f"{self.__class__.__name__}_{world.generate_id()}"
+        self.id_num = world.generate_id()
+        self.id = f"{self.__class__.__name__}_{self.id_num}"
         self.world = world
         self.economy = FacilityCell.Economy(BalanceSheet(economy_config.initial_balance, 0))
         self.bom = config.bill_of_materials

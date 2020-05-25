@@ -39,46 +39,30 @@ class RewardCalculator:
         self.env_config = env_config
     
     def calculate_reward(self, world, step_outcome) -> dict:
-        #return self._weighted_profit(world, step_outcome)
         return self._retailer_profit(world, step_outcome)
-        #return self._downstream_profit(world, step_outcome)
     
-    def _downstream_profit(self, world, step_outcome):
+    def _retailer_profit(self, env, step_outcome):
         
-        def total(name_filter):
-            return statistics.mean(s.total() for f_id, s in step_outcome.facility_step_balance_sheets.items() if name_filter in f_id)
-        
-        w = self.env_config['global_reward_weight']
-        rewards = {}
-        for f_id, s in step_outcome.facility_step_balance_sheets.items():
-            if "Steel" in f_id or "Lumber" in f_id:
-                rewards[f_id] = w*total("Toy") + (1-w)*s.total()
-            if "Toy" in f_id:
-                rewards[f_id] = w*total("Warehouse") + (1-w)*s.total()
-            if "Warehouse" in f_id:
-                rewards[f_id] = w*total("Retailer") + (1-w)*s.total()
-            if "Retailer" in f_id:
-                rewards[f_id] = w*total("Retailer") + (1-w)*s.total()
-        return self._facilities_to_agents(rewards)
-    
-    def _retailer_profit(self, world, step_outcome):
         retailer_revenue = { f_id: sheet.profit for f_id, sheet in step_outcome.facility_step_balance_sheets.items() if "Retailer" in f_id}
-        global_reward = statistics.mean( retailer_revenue.values() )
-        w = self.env_config['global_reward_weight']
-        reward_by_facility = { f_id: w * global_reward + (1 - w) * sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items() }
-        return self._facilities_to_agents(reward_by_facility)
-    
-    def _weighted_profit(self, world, step_outcome):
-        totals = { f_id: sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items() }
-        mean_total = statistics.mean( totals.values() )
-        w = self.env_config['global_reward_weight']
-        reward_by_facility = { f_id: w * mean_total + (1 - w) * total for f_id, total in totals.items() }
-        return self._facilities_to_agents(reward_by_facility)
-    
-    def _facilities_to_agents(self, reward_by_facility):
+        global_reward_retail_revenue = statistics.mean( retailer_revenue.values() )
+        
+        global_profits = { f_id: sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items()}
+        global_reward_total_profit = statistics.mean( global_profits.values() )
+        
+        w_gl_profit = 0.0 + 0.3 * (env.current_iteration / env.n_iterations)
+        
+        global_reward_producer = (1 - w_gl_profit) * global_reward_retail_revenue + w_gl_profit * global_reward_total_profit
+        global_reward_consumer = (1 - w_gl_profit) * global_reward_retail_revenue + w_gl_profit * global_reward_total_profit
+        
+        wp = self.env_config['global_reward_weight_producer']
+        wc = self.env_config['global_reward_weight_consumer']
+        producer_reward_by_facility = { f_id: wp * global_reward_producer + (1 - wp) * sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items() }
+        consumer_reward_by_facility = { f_id: wc * global_reward_consumer + (1 - wc) * sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items() }
+        
         rewards_by_agent = {}
-        for f_id, reward in reward_by_facility.items():
+        for f_id, reward in producer_reward_by_facility.items():
             rewards_by_agent[Utils.agentid_producer(f_id)] = reward
+        for f_id, reward in consumer_reward_by_facility.items():
             rewards_by_agent[Utils.agentid_consumer(f_id)] = reward
         return rewards_by_agent
     
@@ -105,8 +89,13 @@ class StateCalculator:
         facility_type[self.env.facility_types[facility.__class__.__name__]] = 1
         state['facility_type'] = facility_type
         
-        state['balance_profit'] = self._balance_norm( facility.economy.total_balance.profit )
-        state['balance_loss'] = self._balance_norm( facility.economy.total_balance.loss )
+        facility_id_one_hot = [0] * len(self.env.reference_world.facilities)
+        facility_id_one_hot[facility.id_num - 1] = 1
+        state['facility_id'] = facility_id_one_hot
+        
+        #state['balance_profit'] = self._balance_norm( facility.economy.total_balance.profit )
+        #state['balance_loss'] = self._balance_norm( facility.economy.total_balance.loss )
+        state['is_positive_balance'] = 1 if facility.economy.total_balance.total() > 0 else 0
              
         self._add_bom_features(state, facility)
         self._add_distributor_features(state, facility)
@@ -121,12 +110,14 @@ class StateCalculator:
         for i, prod_id in enumerate(self.env.product_ids):
             if prod_id in facility.storage.stock_levels.keys():
                  state['storage_levels'][i] = facility.storage.stock_levels[prod_id]
+        state['storage_utilization'] = sum(state['storage_levels']) / state['storage_capacity']
                     
         return state
     
     def _add_global_features(self, state, world):
-        state['time'] = world.time_step
-        state['balances'] = [ self._balance_norm(f.economy.total_balance.total()) for f in world.facilities.values() ]
+        state['global_time'] = world.time_step / self.env.env_config['episod_duration']
+        state['global_storage_utilization'] = [ f.storage.used_capacity() / f.storage.max_capacity for f in world.facilities.values() ]
+        #state['balances'] = [ self._balance_norm(f.economy.total_balance.total()) for f in world.facilities.values() ]
         
     def _balance_norm(self, v):
         return v/1000
@@ -250,11 +241,14 @@ class ActionCalculator:
                 
                 product_id = self.env.product_ids[ get_or_zero(action, 0) ]
                 exporting_sources = ws.SimpleControlPolicy.find_exporting_sources(facility, product_id)
-                source_id = 0 if len(exporting_sources)==0 else rnd.choice( exporting_sources )
+                source_id_auto = 0 if len(exporting_sources)==0 else rnd.choice( exporting_sources )
+                
+                #source_id_policy = int( round(get_or_zero(action, 1) * (n_facility_sources-1) / self.env.max_sources_per_facility) )
+                source_id_policy = min(get_or_zero(action, 1), n_facility_sources-1)
                 
                 control.consumer_product_id = product_id                    
-                control.consumer_source_id = source_id #min( get_or_zero(action, 1), n_facility_sources-1 )
-                control.consumer_quantity = small_controls_mapping[ get_or_zero(action, 1) ]
+                control.consumer_source_id =  source_id_policy   # source_id_auto
+                control.consumer_quantity = small_controls_mapping[ get_or_zero(action, 2) ]
         
         return control
 
@@ -265,6 +259,8 @@ class WorldOfSupplyEnv(MultiAgentEnv):
     def __init__(self, env_config):
         self.env_config = env_config
         self.reference_world = ws.WorldBuilder.create()
+        self.current_iteration = 0
+        self.n_iterations = 0
         
         self.product_ids = self._product_ids()
         self.max_sources_per_facility = 0
@@ -297,7 +293,7 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         
         self.action_space_consumer = MultiDiscrete([ 
             self.n_products(),                           # consumer product id
-            #Discrete(self.max_sources_per_facility),    # consumer source id
+            self.max_sources_per_facility,               # consumer source id
             6                                            # consumer_quantity
         ])
                 
@@ -326,7 +322,7 @@ class WorldOfSupplyEnv(MultiAgentEnv):
             for agent_id in balances.keys():
                 balances[agent_id] = balances[agent_id] + nop_outcome.facility_step_balance_sheets[agent_id]
             
-        rewards = self.reward_calculator.calculate_reward(self.world, outcome)
+        rewards = self.reward_calculator.calculate_reward(self, outcome)
         
         seralized_states, info_states = self.state_calculator.world_to_state(self.world)
         
@@ -340,8 +336,13 @@ class WorldOfSupplyEnv(MultiAgentEnv):
         agents = []
         for f_id in self.world.facilities.keys():
             agents.append(Utils.agentid_producer(f_id))
+        for f_id in self.world.facilities.keys():
             agents.append(Utils.agentid_consumer(f_id))
         return agents
+    
+    def set_iteration(self, iteration, n_iterations):
+        self.current_iteration = iteration
+        self.n_iterations = n_iterations
     
     def n_products(self):
         return len(self._product_ids())
@@ -438,7 +439,7 @@ class ConsumerSimplePolicy(SimplePolicy):
         def default_facility_control(source_id, product_id, order_qty = 4):  # (level 4 -> 8 units)
             control = [
                 product_id,
-                #source_id,
+                source_id,
                 order_qty
             ]
             return control
@@ -454,7 +455,8 @@ class ConsumerSimplePolicy(SimplePolicy):
     
     def _find_source(self, f_state_info):
         # stop placing orders when the facility ran out of money
-        if f_state_info['balance_profit'] - f_state_info['balance_loss'] <= 0: 
+        #if f_state_info['balance_profit'] - f_state_info['balance_loss'] <= 0: 
+        if f_state_info['is_positive_balance'] <= 0:
             return (0, 0, 0)
             
         inputs = f_state_info['bom_inputs']

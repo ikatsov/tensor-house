@@ -7,6 +7,7 @@ matplotlib
 seaborn
 pandas
 lz4
+sklearn
 
 # ========== Deep learning ==========
 torch
@@ -25,10 +26,11 @@ gym
 opencv-python
 dm-tree
 
+# ========== Probabilistic programming ==========
+pymc3
+tensorflow_probability
+statsmodels
+
 # ========== System dependencies ==========
 # apt-get install ffmpeg
 # pip install -U pip # ensure pip>=20.0
-
-# ========== GPU support ==========
-# 1. Check the devise: lspci | grep -i nvidia 
-# 2. Follow the instatuction https://developer.nvidia.com/cuda-downloads
