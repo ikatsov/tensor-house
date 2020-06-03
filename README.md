@@ -33,6 +33,7 @@ World Of Supply simulation environment*
    * Multi-touch Multi-channel Attribution Model using Deep Learning (LSTM with Attention)
 * Search
    * Latent Semantic Analysis (LSA)
+   * Image Search by Artistic Style (VGG16)
 * Recommendations
    * Nearest Neighbor User-based Collaborative Filtering
    * Nearest Neighbor Item-based Collaborative Filtering
