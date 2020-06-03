@@ -47,7 +47,7 @@ World Of Supply simulation environment*
   * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3)
   * World Of Supply: A Supply Chain Simulator for Reinforcement Learning Based Optimization
 * Enterpirse Time Series Analysis
-  * Demand forecasting using ARIMA
+  * Demand forecasting using ARIMA and SARIMA
   * Demand decomposition and forecasting using Bayesian Structural Time Series (BSTS)
 
 ### Approach
