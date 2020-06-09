@@ -3,6 +3,7 @@ from PIL import Image, ImageFont, ImageDraw
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
+from collections import Counter
 import yaml
 from multipledispatch import dispatch
 import importlib
@@ -11,7 +12,6 @@ import sys
 from IPython.display import display, HTML
 
 import world_of_supply_environment as ws
-importlib.reload(ws)
 
 class Utils:
     def ascii_progress_bar(done, limit, bar_lenght_char = 15):
@@ -25,7 +25,6 @@ class Utils:
 class WorldRenderer:
     def plot_sequence_images(image_array):
         ''' Display images sequence as an animation in jupyter notebook
-    
         Args:
         image_array(numpy.ndarray): image_array.shape equal to (num_images, height, width, num_channels)
         '''
@@ -40,12 +39,13 @@ class WorldRenderer:
 
         anim = animation.FuncAnimation(fig, animate, frames=len(image_array), interval=200, repeat_delay=1, repeat=True)
         display(HTML(anim.to_html5_video()))
+        
 
 class AsciiWorldStatusPrinter():
     
     @dispatch(ws.World)
     def status(world: ws.World) -> list:
-        status = [ ["World:", [f"Global balance: {world.economy.global_balance()}"]] ]
+        status = [ ["World:", [f"Time step: {world.time_step}", f"Global balance: {world.economy.global_balance()}"]] ]
         for f in world.facilities.values():
             status.append(AsciiWorldStatusPrinter.status(f))    
             
@@ -56,35 +56,59 @@ class AsciiWorldStatusPrinter():
     
     @dispatch(ws.FacilityCell)
     def status(facility: ws.FacilityCell) -> list:
-        status = AsciiWorldStatusPrinter.cell_status(facility)
+        status = [f"{facility.id} ({facility.x}, {facility.y})"] 
         
         substatuses = [f"Balance: {facility.economy.total_balance}"]
         if facility.distribution is not None:
-            substatuses.append( ["Fleet:", 
-                                [f"{v.__class__.__name__} {Utils.ascii_progress_bar(v.location_pointer, v.path_len()-1)}, payload: {v.payload}" 
-                                for v in facility.distribution.fleet]
-                              ])
-            q = facility.distribution.order_queue
-            ordered_quantity = sum([ order.quantity for order in q])
-            substatuses.append( [f"Inbound orders: {len(q)}, total units: {ordered_quantity}"] )
+            u = facility.distribution
+            transport_status = [ f"{AsciiWorldStatusPrinter.status(t)} {Utils.ascii_progress_bar(t.location_pointer, t.path_len()-1, 5)}" for t in u.fleet ]
+            substatuses.append( ["Fleet:", transport_status] )
+            inbound_orders = [ f"{order.product_id}:{order.quantity} at ${order.unit_price} -> {order.destination.id}" for order in u.order_queue]
+            substatuses.append( [f"Inbound orders:", inbound_orders] )
+            substatuses.append( [f"Current unit price: ${u.economy.unit_price}"] )
+            substatuses.append( [f"Penalties: wrong orders {u.economy.total_wrong_order_penalties}, pending orders {u.economy.total_pending_order_penalties}"] )
             
         if facility.consumer is not None:
-            substatuses.append( [f"Outbound orders: {dict(facility.consumer.open_orders)}"] )
+            in_transit_units_total = sum(sum(facility.consumer.open_orders.values(), Counter()).values())
+            outbound_orders = [ f"{src} -> {AsciiWorldStatusPrinter.counter(order)}" for src, order in facility.consumer.open_orders.items()]
+            substatuses.append( [f"Outbound orders ({in_transit_units_total} units):", outbound_orders] )
             substatuses.append( [f"Total units purchased: {facility.consumer.economy.total_units_purchased}"] )
             substatuses.append( [f"Total units received: {facility.consumer.economy.total_units_received}"] )
             
         if facility.seller is not None:
+            substatuses.append( [f"Current unit price: ${facility.seller.economy.unit_price}"] )
+            substatuses.append( [f"Current demand: {facility.seller.economy.market_demand(facility.seller.economy.unit_price)}"] )
             substatuses.append( [f"Total units sold: {facility.seller.economy.total_units_sold}"] )
+            
         
         substatuses.append(["Storage:", AsciiWorldStatusPrinter.status(facility.storage) ])
         status.append(substatuses)
+        return status
+    
+    @dispatch(ws.Transport)
+    def status(t: ws.Transport) -> str:
+        status = None
+        if t.destination is None:
+            status = "IDLE"
+        else:
+            if t.location_pointer == 0 and t.payload == 0:
+                status = f"LOAD {t.product_id}:{t.requested_quantity} -> {t.destination.id}"
+            if t.payload > 0 and t.step > 0:
+                status = f"MOVE {t.product_id}:{t.payload} -> {t.destination.id}"
+            if t.location_pointer == len(t.path) - 1 and t.payload > 0:
+                status = f"UNLD {t.product_id}:{t.payload} -> {t.destination.id}"
+            if t.step < 0 and t.payload == 0:
+                status = f"BACK {t.destination.id} -> home" 
         return status
     
     @dispatch(ws.StorageUnit)
     def status(storage: ws.StorageUnit) -> list:
         return [f"Usage: {Utils.ascii_progress_bar(storage.used_capacity(), storage.max_capacity)}",
                 f"Storage cost/unit: {storage.economy.unit_storage_cost}",
-                f"Inventory: {dict(storage.stock_levels)}"]
+                f"Inventory: {AsciiWorldStatusPrinter.counter(storage.stock_levels)}"]
+    
+    def counter(counter) -> str:
+        return dict(counter + Counter()) # this removes zero counters
 
     
 class AsciiWorldRenderer(WorldRenderer):
@@ -136,14 +160,13 @@ class AsciiWorldRenderer(WorldRenderer):
         margin_side = 150 
         margin_top = 20
         font = ImageFont.truetype("resources/FiraMono-Bold.ttf", 24)
-        #font = ImageFont.truetype("resources/monaco.ttf", 24)
         
         test_text = "\n".join(''.join(row) for row in ascii_layers[0])
         test_img = PIL.Image.new('RGB', (10, 10))
         test_canvas = ImageDraw.Draw(test_img)
         (map_w, map_h) = test_canvas.multiline_textsize(test_text, font=font)
         img_w = map_w + 2 * margin_side
-        img_h = int(map_h * 3.0)
+        img_h = int(map_h * 4.0)
         
         img = PIL.Image.new('RGB', (img_w, img_h), color='#263238')
         canvas = ImageDraw.Draw(img)
@@ -162,8 +185,7 @@ class AsciiWorldRenderer(WorldRenderer):
         img.paste(logo, (int(img_w/2 - img_w/10), 0), mask=logo)
         
         # print status
-        #font = ImageFont.truetype("resources/FiraMono-Regular.ttf", 12)
-        font = ImageFont.truetype("resources/monaco.ttf", 12)
+        font = ImageFont.truetype("resources/monaco.ttf", 11)
         status = AsciiWorldStatusPrinter.status(world)
         n_columns = 3
         n_rows = math.ceil(len(status) / n_columns)
@@ -171,10 +193,13 @@ class AsciiWorldRenderer(WorldRenderer):
         for i in range(n_columns):
             column_left_x = img_w/2 - (n_columns * col_wide)/2 + col_wide*i
             canvas.multiline_text((column_left_x, map_h * 1.1), 
-                                  yaml.dump(status[i*n_rows : (i+1)*n_rows], default_style=None), 
+                                  self.to_yaml(status[i*n_rows : (i+1)*n_rows]), 
                                   font=font, fill='#BBBBBB')
         
         return img
+    
+    def to_yaml(self, obj):
+        return yaml.dump(obj).replace("'", '')
 
     def railroad_sprite(self, x, y, grid):
         top = False
