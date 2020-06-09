@@ -49,7 +49,7 @@ class RewardCalculator:
         global_profits = { f_id: sheet.total() for f_id, sheet in step_outcome.facility_step_balance_sheets.items()}
         global_reward_total_profit = statistics.mean( global_profits.values() )
         
-        w_gl_profit = 0.0 + 0.3 * (env.current_iteration / env.n_iterations)
+        w_gl_profit = 0.0 + 0.8 * (env.current_iteration / env.n_iterations)
         
         global_reward_producer = (1 - w_gl_profit) * global_reward_retail_revenue + w_gl_profit * global_reward_total_profit
         global_reward_consumer = (1 - w_gl_profit) * global_reward_retail_revenue + w_gl_profit * global_reward_total_profit
@@ -454,8 +454,7 @@ class ConsumerSimplePolicy(SimplePolicy):
         return action
     
     def _find_source(self, f_state_info):
-        # stop placing orders when the facility ran out of money
-        #if f_state_info['balance_profit'] - f_state_info['balance_loss'] <= 0: 
+        # stop placing orders when the facility ran out of money 
         if f_state_info['is_positive_balance'] <= 0:
             return (0, 0, 0)
             

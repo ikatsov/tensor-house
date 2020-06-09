@@ -43,18 +43,6 @@ env_config = {
 }
 env = wsr.WorldOfSupplyEnv(env_config)
 
-class ProducerActionDistribution(MultiCategorical):
-    def __init__(self, inputs, model):
-        MultiCategorical.__init__(self, inputs, model, env.action_space_producer.nvec)
-        
-class ConsumerActionDistribution(MultiCategorical):
-    def __init__(self, inputs, model):
-        MultiCategorical.__init__(self, inputs, model, env.action_space_consumer.nvec)
-
-# ensure MultiCategorical action distribution
-ModelCatalog.register_custom_action_dist( "producer_action_dist", ProducerActionDistribution )
-ModelCatalog.register_custom_action_dist( "consumer_action_dist", ConsumerActionDistribution )
-
 base_trainer_config = {
     'env_config': env_config,
     'timesteps_per_iteration': 25000,
@@ -73,8 +61,7 @@ ppo_policy_config_producer = {
     "model": {
         "fcnet_hiddens": [128, 128],
         
-        #"custom_model": "facility_net",
-        #"custom_action_dist": "producer_action_dist"
+        #"custom_model": "facility_net"
     }
 }
 
@@ -83,12 +70,11 @@ ppo_policy_config_consumer = {
         "fcnet_hiddens": [256, 256],
         
         #"custom_model": "facility_net",
-        #"custom_action_dist": "consumer_action_dist"
                 
         # == LSTM ==
-        #"use_lstm": False,
-        #"max_seq_len": 16,
-        #"lstm_cell_size": 64, 
+        #"use_lstm": True,
+        #"max_seq_len": 8,
+        #"lstm_cell_size": 128, 
         #"lstm_use_prev_action_reward": False,
     }
 }
@@ -143,27 +129,14 @@ policy_mapping_global = {
     }
 
 def update_policy_map(policy_map, i = 0, n_iterations = 0): # apply all changes by default
-                     
-    if i == int(n_iterations/100*25):
-        policy_map['WarehouseCell_6p'] = 'ppo_producer'
-        policy_map['WarehouseCell_6c'] = 'ppo_consumer'
+    pass                     
+#    if i == int(n_iterations/100*25):
+#        policy_map['WarehouseCell_6p'] = 'ppo_producer'
+#        policy_map['WarehouseCell_6c'] = 'ppo_consumer'
         
-    if i == int(n_iterations/100*35):
-        policy_map['WarehouseCell_7p'] = 'ppo_producer'
-        policy_map['WarehouseCell_7c'] = 'ppo_consumer'
-        
-#    if i == int(n_iterations/100*50):
+#    if i == int(n_iterations/100*35):
+#        policy_map['WarehouseCell_7p'] = 'ppo_producer'
 #        policy_map['WarehouseCell_7c'] = 'ppo_consumer'
-        
-#    if i == int(n_iterations/100*60):
-#        policy_map['WarehouseCell_7c'] = 'ppo_consumer'
-        
-#    if i == int(n_iterations/100*70):
-#        policy_map['RetailerCell_8c'] = 'ppo_consumer'
-        
-#    if i == int(n_iterations/100*80):
-#        policy_map['RetailerCell_9c'] = 'ppo_consumer'
-        
     
 
 def create_policy_mapping_fn(policy_map):
@@ -201,7 +174,7 @@ def play_baseline(n_iterations):
 
     for i in range(n_iterations):
         print("== Iteration", i, "==")
-        print(pretty_print(handcoded_trainer.train()))
+        print_training_results(handcoded_trainer.train())
         
     return handcoded_trainer
     
@@ -213,13 +186,10 @@ def train_ppo(n_iterations):
     ext_conf.update({
             "num_workers": 16,
             "num_gpus": 1,
-            #"vf_clip_param": 1000.0,
-            #"lr_schedule": [[0, 0.01], [100000, 0.0001]],
             "vf_share_layers": True,
-            "vf_loss_coeff": 20.00,       # 20.00 is the best thus far
+            "vf_loss_coeff": 20.00,      
             "vf_clip_param": 200.0,
-            "lr": 1e-4,
-            #"use_pytorch": True,
+            "lr": 2e-4,
             "multiagent": {
                 "policies": filter_keys(policies, set(policy_mapping_global.values())),
                 "policy_mapping_fn": create_policy_mapping_fn(policy_map),
@@ -233,6 +203,7 @@ def train_ppo(n_iterations):
         env = wsr.WorldOfSupplyEnv,
         config = dict(ext_conf, **base_trainer_config))
     
+    training_start_time = time.process_time()
     for i in range(n_iterations):
         print(f"\n== Iteration {i} ==")
         update_policy_map(policy_map, i, n_iterations)
@@ -246,48 +217,6 @@ def train_ppo(n_iterations):
         result = ppo_trainer.train()
         print(f"Iteration {i} took [{(time.process_time() - t):.2f}] seconds")
         print_training_results(result)
+        print(f"Training ETA: [{(time.process_time() - training_start_time)*(n_iterations/(i+1)-1)/60/60:.2f}] hours to go")
         
     return ppo_trainer
-
-
-def train_qmix(n_iterations):
-    
-    policy_map = policy_mapping_global.copy()
-    ext_conf = qmix.DEFAULT_CONFIG.copy()
-    ext_conf.update({
-            "num_workers": 16,
-            "num_gpus": 1,
-            "multiagent": {
-                "policies": filter_keys(policies, set(policy_mapping_global.values())),
-                "policy_mapping_fn": create_policy_mapping_fn(policy_map),
-                "policies_to_train": ['qmix_producer']
-            }
-        })
-    
-    from ray.tune import register_env
-    register_env(
-        'grouped_world_of_supply',
-        lambda config: wsr.WorldOfSupplyEnv(config).with_agent_groups(
-            {
-                'group01' : list(policy_mapping_global.keys())
-            },
-            obs_space=env.observation_space
-        ))
-    
-    print(f"Environment: action space producer {env.action_space_producer}, action space consumer {env.action_space_consumer}, observation space {env.observation_space}")
-    
-    qmix_trainer = qmix.QMixTrainer(
-        env = 'grouped_world_of_supply',
-        config = dict(ext_conf, **base_trainer_config))
-    
-    for i in range(n_iterations):
-        print(f"\n== Iteration {i} ==")
-        update_policy_map(policy_map, i, n_iterations)
-        print(f"- policy map: {policy_map}")
-        
-        t = time.process_time()
-        result = qmix_trainer.train()
-        print(f"Iteration {i} took [{(time.process_time() - t):.2f}] seconds")
-        print_training_results(result)
-        
-    return qmix_trainer
