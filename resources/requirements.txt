@@ -1,0 +1,36 @@
+# ========== Common ==========
+numpy
+tqdm
+functools
+pyyaml
+matplotlib
+seaborn
+pandas
+lz4
+sklearn
+
+# ========== Deep learning ==========
+torch
+torchvision
+tensorflow
+
+# ========== World of supply ==========
+networkx
+pillow
+multipledispatch
+ray
+ray[rllib]
+ray[dashboard]
+ray[tune]
+gym
+opencv-python
+dm-tree
+
+# ========== Probabilistic programming ==========
+pymc3
+tensorflow_probability
+statsmodels
+
+# ========== System dependencies ==========
+# apt-get install ffmpeg
+# pip install -U pip # ensure pip>=20.0
