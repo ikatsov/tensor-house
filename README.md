@@ -46,10 +46,11 @@ World Of Supply simulation environment*
   * Price Optimization using Reinforcement Learning (DQN)
 * Supply Chain
   * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3)
-  * World Of Supply: A Supply Chain Simulator for Reinforcement Learning Based Optimization
+  * Supply Chain Simulator for Reinforcement Learning Based Optimization
 * Enterpirse Time Series Analysis
-  * Demand forecasting using ARIMA and SARIMA
-  * Demand decomposition and forecasting using Bayesian Structural Time Series (BSTS)
+  * Demand Forecasting using ARIMA and SARIMA
+  * Financial Time Series Analysis using VAR and VEC
+  * Demand Decomposition and Forecasting using Bayesian Structural Time Series (BSTS)
 
 ### Approach
 * The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
