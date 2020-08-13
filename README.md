@@ -40,16 +40,18 @@ World Of Supply simulation environment*
    * Item2Vec Model using NLP Methods (word2vec)
    * Customer2Vec Model using NLP Methods (doc2vec)
 * Pricing and Assortment
-  * Markdown Price Optimization
-  * Dynamic Pricing using Thompson Sampling
-  * Dynamic Pricing with Limited Price Experimentation
-  * Price Optimization using Reinforcement Learning (DQN)
+   * Markdown Price Optimization
+   * Dynamic Pricing using Thompson Sampling
+   * Dynamic Pricing with Limited Price Experimentation
+   * Price Optimization using Reinforcement Learning (DQN)
 * Supply Chain
-  * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3)
-  * World Of Supply: A Supply Chain Simulator for Reinforcement Learning Based Optimization
+   * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3)
+   * A Supply Chain Simulator for Reinforcement Learning Based Optimization (World Of Supply)
 * Enterpirse Time Series Analysis
-  * Demand forecasting using ARIMA and SARIMA
-  * Demand decomposition and forecasting using Bayesian Structural Time Series (BSTS)
+   * Demand forecasting using ARIMA and SARIMA
+   * Demand decomposition and forecasting using Bayesian Structural Time Series (BSTS)
+   * Forecasting and decomposition using gradient boosted decision trees (GBDT, XGBoost/LightGBM)  
+   * Forecasting and decomposition using VAR/VEC models
 
 ### Approach
 * The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
