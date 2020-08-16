@@ -46,11 +46,12 @@ World Of Supply simulation environment*
    * Price Optimization using Reinforcement Learning (DQN)
 * Supply Chain
    * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3)
-   * Supply Chain Simulator for Reinforcement Learning Based Optimization
+   * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO)
 * Enterpirse Time Series Analysis
    * Demand Forecasting Using ARIMA and SARIMA
    * Demand Decomposition and Forecasting using Bayesian Structural Time Series (BSTS)
-   * Forecasting and Decomposition using Gradient Boosted Decision Trees (GBDT, XGBoost/LightGBM)  
+   * Forecasting and Decomposition using Gradient Boosted Decision Trees (GBDT) 
+   * Forecasting and Decomposition using LSTM with Attention
    * Forecasting and Decomposition using VAR/VEC models
 
 ### Approach
