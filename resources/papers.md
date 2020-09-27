@@ -62,6 +62,7 @@ What follows is a manually curated list of papers in modern data science and ope
 6. **[ Dstillery2012 ]** Dalessandro B., Perlich C., Stitelman O., Provost F. -- Causally motivated attribution for online advertising, 2012
 7. **[ TurnInc2011 ]** Shao X., Li L. -- Data-driven Multi-touch Attribution Models, 2011
 8. **[ IntegralAds2015 ]** Hill D., Moakler R., Hubbard A., Tsemekhman V., Provost F., Tsemekhman K. -- Measuring Causal Impact of Online Actions via Natural Experiments: Application to Display Advertising, 2015
+9. **[ Google2017 ]** Jin Y., Wang Y., Sun Y., Chan D., Koehler J. -- Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects, 2017
 
 ---
 # Price Management and Optimization
