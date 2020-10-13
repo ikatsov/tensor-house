@@ -32,6 +32,7 @@ World Of Supply simulation environment*
    * Customer Lifetime Value (LTV) Modeling using Markov Chain
    * Next Best Action Model using Reinforcement Learning (Fitted Q Iteration)
    * Multi-touch Multi-channel Attribution Model using Deep Learning (LSTM with Attention)
+   * Customer Churn Analysis and Prediction using Deep Learning (LSTM with Attention)
 * Search
    * Latent Semantic Analysis (LSA)
    * Image Search by Artistic Style (VGG16)
