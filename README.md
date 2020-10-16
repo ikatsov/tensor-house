@@ -29,9 +29,10 @@ World Of Supply simulation environment*
 * Promotions and Advertisements
    * Media Mix Modeling: Basic Addstock Model for Campaign/Channel Attribution
    * Media Mix Modeling: Bayesian Model with Carriover and Saturation Effects
+   * Dynamic Content Personalization using Contextual Bandits (LinUCB)
    * Customer Lifetime Value (LTV) Modeling using Markov Chain
    * Next Best Action Model using Reinforcement Learning (Fitted Q Iteration)
-   * Multi-touch Multi-channel Attribution Model using Deep Learning (LSTM with Attention)
+   * Multi-touch Channel Attribution Model using Deep Learning (LSTM with Attention)
    * Customer Churn Analysis and Prediction using Deep Learning (LSTM with Attention)
 * Search
    * Latent Semantic Analysis (LSA)

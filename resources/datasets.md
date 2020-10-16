@@ -31,10 +31,16 @@ The data represents six months of activities of a big e-commerce businesses in E
 * Backup copy (data and description): https://drive.google.com/drive/folders/1pQXY_Pl6UaLYcfvN92pqbDyk2auvyibA
 
 #### Kaggle - Give Me Some Credit
-Historical data are provided on 250,000 borrowers and the prize pool is $5,000 ($3,000 for first, $1,500 for second and $500 for third).
+Historical data are provided on 250,000 borrowers.
 * Data: https://www.kaggle.com/c/GiveMeSomeCredit/data
 * Description: https://www.kaggle.com/c/GiveMeSomeCredit/data
 * Backup copy (data and description): https://drive.google.com/drive/folders/14Ss_wSOHP8L7KmHxZelttTR6OadA2ELU
+
+#### MovieLens - 100K Dataset
+MovieLens 100K movie ratings. Stable benchmark dataset. 100,000 ratings from 1000 users on 1700 movies. Released 4/1998.
+* Data: https://grouplens.org/datasets/movielens/100k/
+* Description: https://grouplens.org/datasets/movielens/25m/
+* Backup copy (data and description): https://drive.google.com/drive/folders/1GhJGkFAwNb95Jnah6OEKJH2oDg0ls25g
 
 #### MovieLens - 25M Dataset
 MovieLens 25M movie ratings. Stable benchmark dataset. 25 million ratings and one million tag applications applied to 62,000 movies by 162,000 users. Includes tag genome data with 15 million relevance scores across 1,129 tags. Released 12/2019
