@@ -35,6 +35,7 @@ What follows is a manually curated list of papers in modern data science and ope
 3. **[ Criteo2018 ]** Rohde D., Bonner S., Dunlop T., Vasile F., Karatzoglou A. -- RecoGym: A Reinforcement Learning Environment for the Problem of Product Recommendation in Online Advertising, 2018
 4. **[ Spotify2018 ]** McInerney J., Lacker B., Hansen S., Higley K., Bouchard H., Gruson A., Mehrotra R. -- Explore, Exploit, and Explain: Personalizing Explainable Recommendations with Bandits, 2018
 5. **[ Google2018 ]** Chen M., Beutel A., Covington P., Jain S., Belletti F., Chi E. -- Top-K Off-Policy Correction for a REINFORCE Recommender System, 2018
+6. **[ Yahoo2010 ]** Li L., Chu W., Langford J., Schapire R. -- A Contextual-Bandit Approach to Personalized News Article Recommendation, 2010
 
 #### Deep Learning Methods
 1. **[ Airbnb2019 ]** Du G. -- Discovering and Classifying In-app Message Intent at Airbnb, 2019
