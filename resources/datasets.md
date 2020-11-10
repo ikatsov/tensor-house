@@ -16,7 +16,7 @@ Data has been sub-sampled and anonymized so as not to disclose proprietary eleme
 * Description: http://ailab.criteo.com/criteo-attribution-modeling-bidding-dataset/
 * Backup copy (data and description): https://drive.google.com/open?id=1WY6DdbbL6nzcxLA3z3vWYAbqNXeCg9Qu
 
-#### Dunnhumby - The Complete Journey
+#### Dunnhumby - Retail Transactions (The Complete Journey dataset)
 Household level transactions over two years from a group of 2,500 households who are frequent shoppers at a retailer
 All of a household’s purchases within the store, not just those from a limited number of categories
 Demographics and direct marketing contact history for select households
@@ -53,3 +53,9 @@ This dataset is created by Elo, one of the largest payment brands in Brazil. The
 * Data: https://www.kaggle.com/c/elo-merchant-category-recommendation/data
 * Description: https://www.kaggle.com/c/elo-merchant-category-recommendation/overview
 * Backup copy (data and description): https://drive.google.com/drive/folders/1HmrVX4nAT3AVD9jHIe_z-pTKn7Jh-J-h?usp=sharing
+
+#### Amazon - Product Reviews
+This dataset was constructed by Amazon to represent a sample of customer evaluations and opinions, variation in the perception of a product across geographical regions, and promotional intent or bias in reviews.
+* Data: https://s3.amazonaws.com/amazon-reviews-pds/readme.html
+* Description: https://s3.amazonaws.com/amazon-reviews-pds/readme.html
+* Backup copy (data and description), apparel category only: https://drive.google.com/drive/folders/1LrQQeSRDwxjW9Bt44NaWzbScpMG8Ux47
