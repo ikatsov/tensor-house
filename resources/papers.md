@@ -65,6 +65,10 @@ What follows is a manually curated list of papers in modern data science and ope
 8. **[ IntegralAds2015 ]** Hill D., Moakler R., Hubbard A., Tsemekhman V., Provost F., Tsemekhman K. -- Measuring Causal Impact of Online Actions via Natural Experiments: Application to Display Advertising, 2015
 9. **[ Google2017 ]** Jin Y., Wang Y., Sun Y., Chan D., Koehler J. -- Bayesian Methods for Media Mix Modeling with Carryover and Shape Effects, 2017
 
+### Identity Resolution and Cross-Device Tracking
+1. Phan M., Tay Y., Pham T. -- Cross Device Matching for Online Advertising with Neural Feature Ensembles: First Place Solution at CIKM Cup 2016, 2017
+2. Karakaya C., Toguc H., Kuzu R., Buyuklu A. -- Survey of Cross Device Matching Approaches with a Case Study on a Novel Database, 2018
+
 ---
 # Price Management and Optimization
 
