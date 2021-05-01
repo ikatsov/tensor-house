@@ -46,11 +46,17 @@ World Of Supply simulation environment*
 [1](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender.ipynb)
 [2](https://github.com/ikatsov/tensor-house/blob/master/recommendations/factorization-sgd-neural.ipynb))
 * Pricing and Assortment
-   * Markdown Price Optimization ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/markdown-optimization.ipynb))
+   * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb))
+   * Price Elastiity Analysis ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-elasticity.ipynb))
+   * Price Optimization for Multiple Products ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-products.ipynb))
+   * Price Optimization for Multiple Time Intervals ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-time-intervals.ipynb))
    * Dynamic Pricing using Thompson Sampling ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/dynamic-pricing-thompson.ipynb))
    * Dynamic Pricing with Limited Price Experimentation ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/dynamic-pricing-limited-experimentation.ipynb))
+   * Bayesian Demand Models ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/bayesian-demand-models.ipynb))
+   * Demand Uncostraining ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/demand-unconstraining.ipynb))
    * Price Optimization using Reinforcement Learning (DQN) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-using-dqn-reinforcement-learning.ipynb))
 * Supply Chain
+   * Single-echelon Inventory Optimization using (s,Q) and (R,S) Policies ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/single-echelon-sQ-RS.ipynb))
    * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/supply-chain-reinforcement-learning.ipynb))
    * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world-of-supply/world-of-supply.ipynb))
 * Enterpirse Time Series Analysis
@@ -71,7 +77,7 @@ World Of Supply simulation environment*
 ### Approach
 * The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
 * More advanced models use deep learning techniques to analyze event sequences (e.g. clickstream) and reinforcement learning for optimization (e.g. safety stock management policy)
-* Almost all models are based on industrial reports and real-life case studies
+* Most models are based on industrial reports and real-life case studies
 
 ### Community
 Follow our twitter feed for notifications about meetups and new developments.
