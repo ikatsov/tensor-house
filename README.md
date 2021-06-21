@@ -47,7 +47,7 @@ World Of Supply simulation environment*
 [2](https://github.com/ikatsov/tensor-house/blob/master/recommendations/factorization-sgd-neural.ipynb))
 * Pricing and Assortment
    * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb))
-   * Price Elastiity Analysis ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-elasticity.ipynb))
+   * Price Elasticity Analysis ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-elasticity.ipynb))
    * Price Optimization for Multiple Products ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-products.ipynb))
    * Price Optimization for Multiple Time Intervals ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-time-intervals.ipynb))
    * Dynamic Pricing using Thompson Sampling ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/dynamic-pricing-thompson.ipynb))
@@ -61,18 +61,18 @@ World Of Supply simulation environment*
    * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world-of-supply/world-of-supply.ipynb))
 * Enterpirse Time Series Analysis
    * Demand Forecasting Using ARIMA and SARIMA (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/time-series/arima-part-1-algorithm.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/time-series/arima-part-2-use-case.ipynb))
+[1](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/arima-part-1-algorithm.ipynb)
+[2](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/arima-part-2-use-case.ipynb))
    * Demand Decomposition and Forecasting using Bayesian Structural Time Series (BSTS) (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/time-series/bsts-part-1-decomposition.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/time-series/bsts-part-2-forecasting.ipynb)
-[3](https://github.com/ikatsov/tensor-house/blob/master/time-series/bsts-part-3-forecasting-prophet.ipynb)
-[4](https://github.com/ikatsov/tensor-house/blob/master/time-series/bsts-part-4-forecasting-pymc3.ipynb))
-   * Forecasting and Decomposition using Gradient Boosted Decision Trees (GBDT) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/time-series/gbdt-forecasting.ipynb))
-   * Forecasting and Decomposition using LSTM with Attention ([notebook](https://github.com/ikatsov/tensor-house/blob/master/time-series/lstm-forecasting.ipynb))
+[1](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-1-decomposition.ipynb)
+[2](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-2-forecasting.ipynb)
+[3](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-3-forecasting-prophet.ipynb)
+[4](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-4-forecasting-pymc3.ipynb))
+   * Forecasting and Decomposition using Gradient Boosted Decision Trees (GBDT) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/gbdt-forecasting.ipynb))
+   * Forecasting and Decomposition using LSTM with Attention ([notebook](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/lstm-forecasting.ipynb))
    * Forecasting and Decomposition using VAR/VEC models (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/time-series/var-part-1-forecasting-decomposition.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/time-series/var-part-2-market-data.ipynb))
+[1](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/var-part-1-forecasting-decomposition.ipynb)
+[2](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/var-part-2-market-data.ipynb))
 
 ### Approach
 * The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
