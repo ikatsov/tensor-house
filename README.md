@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/ikatsov/algorithmic-marketing-examples/blob/master/resources/logo-2000x436px-gr.png" title="TensorHouse Logo">
+  <img src="https://github.com/ikatsov/algorithmic-marketing-examples/blob/master/_resources/logo-2000x436px-gr.png" title="TensorHouse Logo">
 </p>
 
 ### About
@@ -9,20 +9,20 @@ The project focuses on models, techniques, and datasets that were originally dev
 
 TensorHouse contains the following resources:
 * a well-documented repository of reference model implementations, 
-* a manually curated list of [important papers](https://github.com/ikatsov/tensor-house/blob/master/resources/papers.md) in modern operations research,
-* a manually curated list of [public datasets](https://github.com/ikatsov/tensor-house/blob/master/resources/datasets.md) related to enterprise use cases.
+* a manually curated list of [important papers](https://github.com/ikatsov/tensor-house/blob/master/_resources/papers.md) in modern operations research,
+* a manually curated list of [public datasets](https://github.com/ikatsov/tensor-house/blob/master/_resources/datasets.md) related to enterprise use cases.
 
 ### Illustrative Examples
 *Strategic price optimization using reinforcement learning: \
 DQN learns a Hi-Lo pricing policy that switches between regular and discounted prices*
-![Price Optimization Using RL Animation](https://github.com/ikatsov/tensor-house/blob/master/resources/hilo-pricing-dqn-training-animation.gif)
+![Price Optimization Using RL Animation](https://github.com/ikatsov/tensor-house/blob/master/_resources/hilo-pricing-dqn-training-animation.gif)
 
 *Supply chain optimization using reinforcement learning: \
 World Of Supply simulation environment*
-![Price Optimization Using RL Animation](https://github.com/ikatsov/tensor-house/blob/master/resources/demo-animation-world-of-supply.gif)
+![Price Optimization Using RL Animation](https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-world-of-supply.gif)
 
 *Demand decomposition using Bayesian Structural Time Series*
-![Demand Decomposition Example](https://github.com/ikatsov/tensor-house/blob/master/resources/demand-decomposition-example.png)
+![Demand Decomposition Example](https://github.com/ikatsov/tensor-house/blob/master/_resources/demand-decomposition-example.png)
 
 ### List of Models 
 
@@ -61,18 +61,18 @@ World Of Supply simulation environment*
    * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world-of-supply/world-of-supply.ipynb))
 * Enterpirse Time Series Analysis
    * Demand Forecasting Using ARIMA and SARIMA (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/arima-part-1-algorithm.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/arima-part-2-use-case.ipynb))
+[1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-1-algorithm.ipynb)
+[2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-2-use-case.ipynb))
    * Demand Decomposition and Forecasting using Bayesian Structural Time Series (BSTS) (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-1-decomposition.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-2-forecasting.ipynb)
-[3](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-3-forecasting-prophet.ipynb)
-[4](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/bsts-part-4-forecasting-pymc3.ipynb))
-   * Forecasting and Decomposition using Gradient Boosted Decision Trees (GBDT) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/gbdt-forecasting.ipynb))
-   * Forecasting and Decomposition using LSTM with Attention ([notebook](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/lstm-forecasting.ipynb))
+[1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-1-decomposition.ipynb)
+[2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-2-forecasting.ipynb)
+[3](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-3-forecasting-prophet.ipynb)
+[4](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-4-forecasting-pymc3.ipynb))
+   * Forecasting and Decomposition using Gradient Boosted Decision Trees (GBDT) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/gbdt-forecasting.ipynb))
+   * Forecasting and Decomposition using LSTM with Attention ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/lstm-forecasting.ipynb))
    * Forecasting and Decomposition using VAR/VEC models (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/var-part-1-forecasting-decomposition.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/basic-components/time-series/var-part-2-market-data.ipynb))
+[1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/var-part-1-forecasting-decomposition.ipynb)
+[2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/var-part-2-market-data.ipynb))
 
 ### Approach
 * The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
