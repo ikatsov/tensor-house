@@ -34,9 +34,12 @@ World Of Supply simulation environment*
    * Next Best Action Model using Reinforcement Learning (Fitted Q Iteration) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/next-best-action-rl.ipynb))
    * Multitouch Channel Attribution Model using Deep Learning (LSTM with Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/channel-attribution-lstm.ipynb))
    * Customer Churn Analysis and Prediction using Deep Learning (LSTM with Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/churn-prediction-lstm.ipynb))
+
 * Search
-   * Latent Semantic Analysis (LSA) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/lsa.ipynb))
-   * Image Search by Artistic Style (VGG16) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/image-artistic-style-similarity.ipynb))
+   * Latent Semantic Analysis (LSA) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/text-search-lsa.ipynb))
+   * Visual Search by Artistic Style (VGG16) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/visual-search-artistic-style.ipynb))
+   * Visual Search based on Product Type (EfficientNetB0) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/visual-search-similarity.ipynb))
+
 * Recommendations
    * Nearest Neighbor User-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/user-based-cf.ipynb))
    * Nearest Neighbor Item-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/item-based-cf.ipynb))
@@ -45,6 +48,7 @@ World Of Supply simulation environment*
    * Deep Learning Recommender (notebooks
 [1](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender.ipynb)
 [2](https://github.com/ikatsov/tensor-house/blob/master/recommendations/factorization-sgd-neural.ipynb))
+
 * Pricing and Assortment
    * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb))
    * Price Elasticity Analysis ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-elasticity.ipynb))
@@ -55,10 +59,18 @@ World Of Supply simulation environment*
    * Bayesian Demand Models ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/bayesian-demand-models.ipynb))
    * Demand Uncostraining ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/demand-unconstraining.ipynb))
    * Price Optimization using Reinforcement Learning (DQN) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-using-dqn-reinforcement-learning.ipynb))
+
 * Supply Chain
    * Single-echelon Inventory Optimization using (s,Q) and (R,S) Policies ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/single-echelon-sQ-RS.ipynb))
    * Multi-echelon Inventory Optimization using Reinforcement Learning (DDPG, TD3) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/supply-chain-reinforcement-learning.ipynb))
    * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world-of-supply/world-of-supply.ipynb))
+
+### Basic Components
+
+* Generic Regression and Classification Models
+    * Neural Network with Vector Inputs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/regression/vector-models.ipynb))
+    * Neural Network with Sequential Inputs (ConvNet, LSTM, Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/regression/sequence-models.ipynb))
+
 * Enterpirse Time Series Analysis
    * Demand Forecasting Using ARIMA and SARIMA (notebooks
 [1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-1-algorithm.ipynb)
