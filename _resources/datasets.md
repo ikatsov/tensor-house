@@ -76,3 +76,8 @@ Data has been sub-sampled and anonymized so as not to disclose proprietary eleme
 * Data: https://github.com/alexeygrigorev/clothing-dataset
 * Description: https://github.com/alexeygrigorev/clothing-dataset
 * Backup copy (data and description): https://drive.google.com/drive/folders/1mmNWO_1yF2cgkeAuS5BwsWJEqcmPJym5?usp=sharing
+
+#### Clothing Co-Parsing (CCP)
+* Data: https://github.com/bearpaw/clothing-co-parsing
+* Description: https://github.com/bearpaw/clothing-co-parsing
+* Backup copy (data and description): https://drive.google.com/drive/folders/1I8yNgNsPHVC8SXUyG8PxpGsL4ut4vyVR?usp=sharing
