@@ -45,8 +45,8 @@ World Of Supply simulation environment*
    * Nearest Neighbor Item-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/item-based-cf.ipynb))
    * Item2Vec Model using NLP Methods (word2vec) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/item2vec.ipynb))
    * Customer2Vec Model using NLP Methods (doc2vec) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/customer2vec.ipynb))
-   * Neural Collaborative Filtering - Prototype ([notebooks](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-factorization.ipynb))
-   * Neural Collaborative Filtering - Hybrid Recommender ([notebooks](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-ncf.ipynb))
+   * Neural Collaborative Filtering - Prototype ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-factorization.ipynb))
+   * Neural Collaborative Filtering - Hybrid Recommender ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-ncf.ipynb))
 
 * Pricing and Assortment
    * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb))
