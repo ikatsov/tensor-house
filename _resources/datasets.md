@@ -35,7 +35,13 @@ The data represents six months of activities of a big e-commerce businesses in E
 #### MovieLens - 100K Dataset
 MovieLens 100K movie ratings. Stable benchmark dataset. 100,000 ratings from 1000 users on 1700 movies. Released 4/1998.
 * Data: https://grouplens.org/datasets/movielens/100k/
-* Description: https://grouplens.org/datasets/movielens/25m/
+* Description: https://grouplens.org/datasets/movielens/100k/
+* Backup copy (data and description): https://drive.google.com/drive/folders/1GhJGkFAwNb95Jnah6OEKJH2oDg0ls25g
+
+#### MovieLens - 1M Dataset
+MovieLens 1M movie ratings. Stable benchmark dataset. 1 million ratings from 6000 users on 4000 movies. Released 2/2003.
+* Data: https://grouplens.org/datasets/movielens/1m/
+* Description: https://grouplens.org/datasets/movielens/1m/
 * Backup copy (data and description): https://drive.google.com/drive/folders/1GhJGkFAwNb95Jnah6OEKJH2oDg0ls25g
 
 #### MovieLens - 25M Dataset
