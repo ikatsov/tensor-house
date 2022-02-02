@@ -49,7 +49,7 @@ World Of Supply simulation environment*
    * Neural Collaborative Filtering - Prototype ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-factorization.ipynb))
    * Neural Collaborative Filtering - Hybrid Recommender ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-ncf.ipynb))
    * Behavior Sequence Transformer ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-transformer.ipynb))
-   * Graph Recommender using Nde2Vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-graph-node2vec.ipynb))
+   * Graph Recommender using Node2Vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-graph-node2vec.ipynb))
 
 * Pricing and Assortment
    * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb))
@@ -68,6 +68,7 @@ World Of Supply simulation environment*
    * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world-of-supply/world-of-supply.ipynb))
    
 * Anomaly Detection
+    * Anomaly Detection in Time Series ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/anomaly-detection-time-series.ipynb))
     * Anomaly Detection in Images using Autoencoders ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/visual-quality-control.ipynb))
 
 ### Basic Components
@@ -76,7 +77,7 @@ World Of Supply simulation environment*
     * Neural Network with Vector Inputs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/regression/vector-models.ipynb))
     * Neural Network with Sequential Inputs (ConvNet, LSTM, Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/regression/sequence-models.ipynb))
 
-* Enterpirse Time Series Analysis
+* Enterprise Time Series Analysis
    * Demand Forecasting Using ARIMA and SARIMA (notebooks
 [1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-1-algorithm.ipynb)
 [2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-2-use-case.ipynb))
@@ -93,10 +94,10 @@ World Of Supply simulation environment*
 
 ### Approach
 * The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
-* More advanced models use deep learning techniques to analyze event sequences (e.g. clickstream) and reinforcement learning for optimization (e.g. safety stock management policy)
+* More advanced models use deep learning techniques to analyze event sequences (e.g. click stream) and reinforcement learning for optimization (e.g. safety stock management policy)
 * Most models are based on industrial reports and real-life case studies
 
 ### Community
 Follow our twitter feed for notifications about meetups and new developments.
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/DataPointsSMT.svg?style=social)](https://twitter.com/DataPointsSMT) 
+[![Twitter Follow](https://img.shields.io/twitter/follow/ikatsov.svg?style=social)](https://twitter.com/ikatsov) 
