@@ -68,6 +68,7 @@ World Of Supply simulation environment*
    * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world-of-supply/world-of-supply.ipynb))
    
 * Anomaly Detection
+    * Noise Reduction in Multivariate Timer Series Using Linear Autoencoder (PCA) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/noise-reduction-pca.ipynb))
     * Anomaly Detection in Time Series ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/anomaly-detection-time-series.ipynb))
     * Anomaly Detection in Images using Autoencoders ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/visual-quality-control.ipynb))
 
