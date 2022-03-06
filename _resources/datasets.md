@@ -76,7 +76,17 @@ Data has been sub-sampled and anonymized so as not to disclose proprietary eleme
 * Backup copy (data and description): https://drive.google.com/open?id=1WY6DdbbL6nzcxLA3z3vWYAbqNXeCg9Qu
 
 
-## 4. Computer Vision
+## 4. Anomaly Detection
+
+#### Turbofan Engine Degradation Simulation Data Set
+Engine degradation simulation was carried out using C-MAPSS. 
+Four different were sets simulated under different combinations of operational conditions and fault modes. 
+Records several sensor channels to characterize fault evolution. The data set was provided by the Prognostics CoE at NASA Ames.
+* Data and descriptin: https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan
+* Backup copy (data and description): https://drive.google.com/drive/folders/1Bc4IrINVjDarZMQrSh5MzAj99k5To20F?usp=sharing
+
+
+## 5. Computer Vision
 
 #### Clothing Dataset
 Over 5,000 clothing images of 20 different classes.

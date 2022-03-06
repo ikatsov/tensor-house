@@ -69,6 +69,7 @@ World Of Supply simulation environment*
    
 * Anomaly Detection
     * Noise Reduction in Multivariate Timer Series Using Linear Autoencoder (PCA) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/noise-reduction-pca.ipynb))
+    * Remaining Useful Life Prediction Using Convolution Networks ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/remaining-useful-life-prediction.ipynb))
     * Anomaly Detection in Time Series ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/anomaly-detection-time-series.ipynb))
     * Anomaly Detection in Images using Autoencoders ([notebook](https://github.com/ikatsov/tensor-house/blob/master/anomaly-detection/visual-quality-control.ipynb))
 
