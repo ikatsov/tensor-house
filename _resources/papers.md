@@ -56,7 +56,7 @@ What follows is a manually curated list of papers in modern data science and ope
 
 ### Channel Attribution, Marketing Spend Optimization, and Ad Bidding
 1. **[ Adobe2018 ]** N. Li, S. K. Arava, C. Dong, Z. Yan, and A. Pani -- Deep Neural Net with Attention for Multi-channel Multi-touch Attribution, 2018
-2. **[ Miaozhen2018 ]** Ren K., et al. -- Learning Multi-touch Conversion Attribution with Dual-attention Mechanisms for Online Advertising, 2018
+2. **[ Miaozhen2018 ]** Ren K., Fang Y., Zhang W., Liu S., Li J., Zhang Y., Yu Y., and Wang J. -- Learning Multi-touch Conversion Attribution with Dual-attention Mechanisms for Online Advertising, 2018
 3. **[ Alibaba2018 ]** D. Wu, X. Chen, X. Yang, H. Wang, Q. Tan, X. Zhang, J. Xu, and K. Gai -- Budget Constrained Bidding by Model-free Reinforcement Learning in Display Advertising, 2018
 4. **[ Alibaba2018]** Zhao J., Qiu G., Guan Z., Zhao W. and He X. -- Deep Reinforcement Learning for Sponsored Search Real-time Bidding, 2018
 5. **[ iProspect2004 ]** Kitts B., Leblanc B. -- Optimial Bidding on Keyword Auctions, 2004
