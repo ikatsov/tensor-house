@@ -16,11 +16,21 @@ Demographics and direct marketing contact history for select households
 * Description: https://www.dunnhumby.com/careers/engineering/sourcefiles
 * Backup copy (data and description): https://drive.google.com/drive/folders/1PAe62y3fgxPSgzvkMph3295Ah9WCMrhR
 
-#### Kaggle - Give Me Some Credit
+#### Give Me Some Credit
 Historical data are provided on 250,000 borrowers.
 * Data: https://www.kaggle.com/c/GiveMeSomeCredit/data
 * Description: https://www.kaggle.com/c/GiveMeSomeCredit/data
 * Backup copy (data and description): https://drive.google.com/drive/folders/14Ss_wSOHP8L7KmHxZelttTR6OadA2ELU
+
+#### KKBox - Churn Prediction Challenge
+KKBOX offers subscription based music streaming service. The dataset includes user transaction and behavior features.
+* Data: https://www.kaggle.com/competitions/kkbox-churn-prediction-challenge/data
+* Description: https://www.kaggle.com/competitions/kkbox-churn-prediction-challenge/overview
+
+#### Olist - Brazilian E-Commerce Public Dataset
+This is a Brazilian ecommerce public dataset of orders made at Olist Store. The dataset has information of 100k orders from 2016 to 2018 made at multiple marketplaces in Brazil.
+* Data: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+* Description: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
 
 
 ## 2. Product Recommendations

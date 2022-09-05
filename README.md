@@ -96,8 +96,10 @@ World Of Supply simulation environment*
 [2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/var-part-2-market-data.ipynb))
 
 ### Approach
-* The most basic models come from Introduction to Algorithmic Marketing book. Book's website - https://algorithmicweb.wordpress.com/
-* More advanced models use deep learning techniques to analyze event sequences (e.g. click stream) and reinforcement learning for optimization (e.g. safety stock management policy)
+* The most basic models come from the *Introduction to Algorithmic Marketing* book. 
+    * Book's website - https://www.algorithmicmarketingbook.com/
+* More advanced models use deep learning and reinforcement learning techniques from *The Theory and Pratice of Enterprise AI* book. 
+    * Book's website - https://www.enterprise-ai-book.com/
 * Most models are based on industrial reports and real-life case studies
 
 ### Community
