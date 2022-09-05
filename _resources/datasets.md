@@ -104,3 +104,8 @@ MVTec AD is a dataset for benchmarking anomaly detection methods with a focus on
 * Data: https://www.mvtec.com/company/research/datasets/mvtec-ad
 * Description: https://www.mvtec.com/company/research/datasets/mvtec-ad
 * Backup copy (data and description): https://drive.google.com/drive/folders/1mmNWO_1yF2cgkeAuS5BwsWJEqcmPJym5?usp=sharing
+
+## 6. Sales data
+#### Tableau User Group Superstore Sales Data 
+* Data: https://community.tableau.com/s/question/0D54T00000CWeX8SAL/sample-superstore-sales-excelxls
+* Backup copy: https://drive.google.com/drive/folders/1UJf-d8iuYCCBU1BFQpEsTIxV1dfUgAUo?usp=sharing
