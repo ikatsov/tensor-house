@@ -44,22 +44,27 @@ World Of Supply simulation environment*
 * Recommendations
    * Nearest Neighbor User-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/user-based-cf.ipynb))
    * Nearest Neighbor Item-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/item-based-cf.ipynb))
-   * Item2Vec Model using NLP Methods (word2vec) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/item2vec.ipynb))
-   * Customer2Vec Model using NLP Methods (doc2vec) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/customer2vec.ipynb))
+   * Item2Vec Model Using NLP Methods (word2vec) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/item2vec.ipynb))
+   * Customer2Vec Model Using NLP Methods (doc2vec) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/customer2vec.ipynb))
    * Neural Collaborative Filtering - Prototype ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-factorization.ipynb))
    * Neural Collaborative Filtering - Hybrid Recommender ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-ncf.ipynb))
    * Behavior Sequence Transformer ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-transformer.ipynb))
    * Graph Recommender Using Node2Vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-graph-node2vec.ipynb))
+   
+* Demand Forecasting
+   * Demand Forecasting Using Exponential Smoothing (ETS) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-exponential-smoothing.ipynb))
+   * Deamnd Forecasting and Price Elasticity Analysis Using Time Series Regression ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/price-regression-elasticity.ipynb))
+   * Demand Forecasting Using DeepAR ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-deepar.ipynb))
+   * Demand Forecasting Using NeuralProphet ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-neural-prophet.ipynb))
+   * Demand Uncostraining ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-unconstraining.ipynb))
 
 * Pricing and Assortment
    * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb))
-   * Price Elasticity Analysis ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-elasticity.ipynb))
    * Price Optimization for Multiple Products ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-products.ipynb))
    * Price Optimization for Multiple Time Intervals ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-time-intervals.ipynb))
    * Dynamic Pricing Using Thompson Sampling ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/dynamic-pricing-thompson.ipynb))
    * Dynamic Pricing with Limited Price Experimentation ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/dynamic-pricing-limited-experimentation.ipynb))
    * Bayesian Demand Models ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/bayesian-demand-models.ipynb))
-   * Demand Uncostraining ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/demand-unconstraining.ipynb))
    * Price Optimization Using Reinforcement Learning (DQN) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-using-dqn-reinforcement-learning.ipynb))
 
 * Supply Chain
@@ -81,10 +86,10 @@ World Of Supply simulation environment*
     * Neural Network with Sequential Inputs (ConvNet, LSTM, Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/regression/sequence-models.ipynb))
 
 * Enterprise Time Series Analysis
-   * Demand Forecasting Using ARIMA and SARIMA (notebooks
+   * Forecasting Using ARIMA and SARIMA (notebooks
 [1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-1-algorithm.ipynb)
 [2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-2-use-case.ipynb))
-   * Demand Decomposition and Forecasting using Bayesian Structural Time Series (BSTS) (notebooks
+   * Decomposition and Forecasting using Bayesian Structural Time Series (BSTS) (notebooks
 [1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-1-decomposition.ipynb)
 [2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-2-forecasting.ipynb)
 [3](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-3-forecasting-prophet.ipynb)
