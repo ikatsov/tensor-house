@@ -99,6 +99,7 @@ What follows is a manually curated list of papers in modern data science and ope
 
 1. Oroojlooyjadid A., Snyder L., Takáč M. -- Applying Deep Learning to the Newsvendor Problem, 2018
 1. Kemmer L., et al. -- Reinforcement learning for supply chain optimization, 2018 
+1. **[ Microsoft2023 ]** Beibin L., et al. -- Large Language Models for Supply Chain Optimization, 2023
 
 ---
 # Search

@@ -1,8 +1,8 @@
 {
     "api_type": "azure",
-    "api_base": "https://scct-openai-1.openai.azure.com/",
+    "api_base": "<< YOUR_API_URL >>",
     "api_version": "2023-05-15",
-    "api_key": "aae557d8fb224feab162b7e76b5c9047",
+    "api_key": "<< YOUR_API_KEY >>",
 
     "text_deployment": "scct-gpt-35-turbo-16k",
     "text_model": "gpt-35-turbo-16k",
