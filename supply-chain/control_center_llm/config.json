@@ -1,0 +1,14 @@
+{
+    "api_type": "azure",
+    "api_base": "https://scct-openai-1.openai.azure.com/",
+    "api_version": "2023-05-15",
+    "api_key": "aae557d8fb224feab162b7e76b5c9047",
+
+    "text_deployment": "scct-gpt-35-turbo-16k",
+    "text_model": "gpt-35-turbo-16k",
+
+    "embedding_deployment": "scct-embedding-ada-002",
+    "embedding_model": "text-embedding-ada-002",
+
+    "data_folder": "data"
+}

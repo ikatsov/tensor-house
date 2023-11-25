@@ -1,0 +1,17 @@
+{
+    "_comment" : "This document describes suppliers and their properties.",
+    "suppliers" :
+    [
+        {
+            "id" : 71001,
+            "name" : "Coffee Wholesale USA",
+            "description" : "At CW-USA, we have a rich history that started with a small-town fork-to-table beginning and an internet coffee idea 20 years ago. Today, we have grown into one of the largest online coffee companies nationwide, fueled by our commitment to low prices and happy customers, every order, every day.\n\nOur journey has been filled with exciting milestones, including joining forces with Miss Ellie's Coffee.org, which opened up new possibilities. With this union, we expanded our product selection to include fresh roasted coffees, enticing flavor syrups, and staying ahead of exciting coffee trends. Our dedication to delivering only the finest and freshest products is unwavering, and we take immense pride in ensuring the highest satisfaction for all our customers."
+        },
+        {
+            "id" : 72001,
+            "name" : "Nature Source Coffee",
+            "description" : "Welcome to Nature Source Coffee, your go-to for top-notch coffee experiences. We're all about quality, superb customer service, and distinctive offerings.\n\nTeaming up with the best U.S. specialty coffee bean suppliers, we ensure excellence in every cup. From 100% Arabica blends to the robust Robusta-Arabica mix, we've got something for everyone. If you're after a caffeine kick, try our Strong Robusta. Prefer a smoother ride? Our Swiss Water Decaf is a hit. Cold Brew enthusiasts, we've got you covered too.\n\nCrafted with precision, we roast our beans to perfection, offering Light, Medium-Light (American), Medium, Medium-Dark, and Dark roasts. Take your pick from Whole Bean or various grind options, like Ground, Coarse Ground, Extra Fine Ground (Turkish/Armenian), and Espresso.\n\nOur offerings come in standard 12-ounce packs and larger 1, 2 & 4-pound bags. Eco-conscious? Our recyclable Single Serve Cups work with all 2.0 and other Single Serve Cups brewers. And if you need larger quantities, explore our Bulk Wholesale Coffees."
+        }
+
+    ]
+}
