@@ -160,11 +160,11 @@ These questionnaires can be used to assess readiness for typical AI/ML projects 
     * Book's website - https://www.enterprise-ai-book.com/
 * Most notebooks contain references to specific research papers, industrial reports, and real-world case studies.
 * Follow LinkedIn and X (Twitter) for notifications about new developments and releases.
-<div id="badges">
-  <a href="https://www.linkedin.com/in/ilya-katsov/">
+<div id="badges" style="text-align: center;">
+  <a href="https://www.linkedin.com/in/ilya-katsov/" style="display: inline-block; margin-left: auto; margin-right: auto;">
     <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
   </a>
-  <a href="https://twitter.com/ikatsov">
+  <a href="https://twitter.com/ikatsov" style="display: inline-block; margin-left: 10px; margin-right: auto;">
     <img src="https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter Badge"/>
   </a>
 </div>
