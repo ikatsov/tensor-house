@@ -65,11 +65,11 @@ This dataset is created by Elo, one of the largest payment brands in Brazil. The
 * Description: https://www.kaggle.com/c/elo-merchant-category-recommendation/overview
 * Backup copy (data and description): https://drive.google.com/drive/folders/1HmrVX4nAT3AVD9jHIe_z-pTKn7Jh-J-h?usp=sharing
 
-#### Amazon - Product Reviews
-This dataset was constructed by Amazon to represent a sample of customer evaluations and opinions, variation in the perception of a product across geographical regions, and promotional intent or bias in reviews.
-* Data: https://s3.amazonaws.com/amazon-reviews-pds/readme.html
-* Description: https://s3.amazonaws.com/amazon-reviews-pds/readme.html
-* Backup copy (data and description), apparel category only: https://drive.google.com/drive/folders/1LrQQeSRDwxjW9Bt44NaWzbScpMG8Ux47
+#### Amazon - Review Data
+This dataset includes reviews (ratings, text, helpfulness votes), product metadata (descriptions, category information, price, brand, and image features), and links (also viewed/also bought graphs).
+* Data: https://cseweb.ucsd.edu/~jmcauley/datasets/amazon_v2/
+* Description: https://cseweb.ucsd.edu/~jmcauley/datasets/amazon_v2/
+* Backup copy (data and description), beauty and apparel categories only: https://drive.google.com/drive/folders/1-hQPQ-fmwMDQCWCYBFfx8Mlj3TgJaxYp
 
 
 ## 3. Click Stream and Advertising
