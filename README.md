@@ -154,13 +154,17 @@ These questionnaires can be used to assess readiness for typical AI/ML projects 
 [2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/var-part-2-market-data.ipynb))
 
 ## More Documentation
-* The most basic models are described the *Introduction to Algorithmic Marketing* book. 
+* The most basic models are described the *Introduction to Algorithmic Marketing*. 
     * Book's website - https://www.algorithmicmarketingbook.com/
-* More advanced models that use deep learning and reinforcement learning techniques are described in *The Theory and Practice of Enterprise AI* book. 
+* More advanced models that use deep learning and reinforcement learning techniques are described in *The Theory and Practice of Enterprise AI*. 
     * Book's website - https://www.enterprise-ai-book.com/
 * Most notebooks contain references to specific research papers, industrial reports, and real-world case studies.
-
-## Community
-Follow the Twitter feed for notifications about new developments.
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/ikatsov.svg?style=social)](https://twitter.com/ikatsov) 
+* Follow LinkedIn and X (Twitter) for notifications about new developments and releases.
+<div id="badges">
+  <a href="https://www.linkedin.com/in/ilya-katsov/">
+    <img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Badge"/>
+  </a>
+  <a href="https://twitter.com/ikatsov">
+    <img src="https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter Badge"/>
+  </a>
+</div>
