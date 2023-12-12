@@ -29,6 +29,11 @@ The project focuses on models, techniques, and datasets that were originally dev
   <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/visual-anomaly-example.png" title="Anomaly Detection in Images">
 </p>
 
+**Decision support system for supply chain management using large language models:** *LLM dynamically writes a python script that invokes multiple APIs to user's question*
+<p align="center">
+  <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-sc-control-tower.gif" title="Dynamic Scripting Using LLMs">
+</p>
+
 ## List of Prototypes and Templates
 The artifacts listed in this section can help to rapidly evaluate different solution approaches and build prototypes using your datasets. Some artifacts can help with doing exploratory data analysis, e.g. evaluating the strength of causal effects in your data and determining whether these data is feasible for solving a certain use case or not.
 
