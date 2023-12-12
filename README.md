@@ -14,24 +14,29 @@ TensorHouse contains the following resources:
 The project focuses on models, techniques, and datasets that were originally developed either by industry practitioners or by academic researchers who worked in collaboration with leading companies in technology, retail, manufacturing, and other sectors. In other words, TensorHouse focuses mainly on industry-proven methods and models rather than on theoretical research.
 
 ## Illustrative Examples
-**Strategic price optimization using reinforcement learning:** *DQN learns a Hi-Lo pricing policy that switches between regular and discounted prices*
+
+#### Strategic price optimization using reinforcement learning
+*DQN learns a Hi-Lo pricing policy that switches between regular and discounted prices:*
 <p align="center">
   <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/hilo-pricing-dqn-training-animation.gif" title="Price Optimization Using RL Animation">
 </p>
 
-**Supply chain optimization using reinforcement learning:** *Diagnostic interface for the simulation environment*
+#### Supply chain optimization using reinforcement learning
+*DQN learns how to control procurement and logistics in a simulated environment:*
 <p align="center">
   <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-world-of-supply.gif" title="Price Optimization Using RL Animation">
 </p>
 
-**Anomaly detection in images using autoencoders:** *Anomaly masks for defect location detection*
+#### Anomaly detection in images using autoencoders
+*Deep autoencoders produce image reconstructions that facilitate detection of defect locations:*
 <p align="center">
   <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/visual-anomaly-example.png" title="Anomaly Detection in Images">
 </p>
 
-**Decision support system for supply chain management using large language models:** *LLM dynamically writes a python script that invokes multiple APIs to user's question*
+#### Supply chain management using large language models
+*LLM dynamically writes a python script that invokes multiple APIs to answer user's question:*
 <p align="center">
-  <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-sc-control-tower.gif" title="Dynamic Scripting Using LLMs">
+  <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-sc-control-tower.gif" title="Dynamic Scripting Using LLMs" width="60%">
 </p>
 
 ## List of Prototypes and Templates
