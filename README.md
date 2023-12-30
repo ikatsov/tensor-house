@@ -14,9 +14,9 @@ TensorHouse focuses mainly on industry-proven methods and models that were origi
 
 ## How Does TensorHouse Help?
 TensorHouse helps to accelerate the following steps of the solution development:
-  * Faster evaluate readiness for specific use cases from the data, integrations, and process perspectives using questionnaires and casual inference templates. 
-  * Choose candidate methods and models for solving your use cases, evaluate and tailor them using simulators and sample datasets. 
-  * Evaluate candidate methods and models on your data, build prototypes, and present preliminary results to stakeholders. 
+1. Faster evaluate readiness for specific use cases from the data, integrations, and process perspectives using questionnaires and casual inference templates. 
+2. Choose candidate methods and models for solving your use cases, evaluate and tailor them using simulators and sample datasets. 
+3. Evaluate candidate methods and models on your data, build prototypes, and present preliminary results to stakeholders. 
 
 ## Illustrative Examples
 
@@ -45,7 +45,9 @@ TensorHouse helps to accelerate the following steps of the solution development:
 </p>
 
 ## List of Prototypes and Templates
-The artifacts listed in this section can help to rapidly evaluate different solution approaches and build prototypes using your datasets. Some artifacts can help with doing exploratory data analysis, e.g. evaluating the strength of causal effects in your data and determining whether these data is feasible for solving a certain use case or not.
+The artifacts listed in this section can help to rapidly evaluate different solution approaches and build prototypes using your datasets. Artifacts are marked with the following qualifiers:
+  * 🧪 - artifacts that are particularly suitable for exploratory data analysis, evaluating the strength of causal effects in your data, and determining whether these data is feasible for solving a certain use case or not.
+  * 🚀 - conceptual prototypes that use advanced methods and not necessarily suitable for productization.
 
 #### Promotions, Offers, and Advertisements
 These notebooks can be used to create customer propensity scoring, offer personalization, and content personalization pipelines. 
@@ -68,7 +70,7 @@ The notebooks can be used to get insights from user-generated content, analyze c
    * Item2Vec Using Word2vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/item2vec.ipynb))
    * Customer2Vec Using Doc2vec (notebooks: [simulator](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec-prototype.ipynb), [prototype](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec.ipynb))
 * Media Mix, Attribution, and Budget Optimization
-   * Campaign Effect Estimation Using Causal Inference Methods (Regression and Matching) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/campaign-effect-causal-inference.ipynb)) 
+   * Campaign Effect Estimation Using Causal Inference Methods (Regression and Matching) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/campaign-effect-causal-inference.ipynb)) (🧪)
    * Media Mix Modeling: Adstock Model for Campaign/Channel Attribution ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/mediamix-adstock.ipynb))
    * Media Mix Modeling: Bayesian Model with Carryover and Saturation Effects ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/mediamix-bayesian.ipynb))
    * Multitouch Channel Attribution Model Using Deep Learning (LSTM with Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/channel-attribution-lstm.ipynb))
@@ -108,6 +110,7 @@ These notebooks can be used to create demand and sales forecasting pipelines. Th
 * Traditional Methods
    * Demand Forecasting for a Single Entity Using Exponential Smoothing (ETS) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-univariate-exponential-smoothing.ipynb))
    * Demand Forecasting for a Single Entity Using Autoregression (ARIMA/SARIMAX) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-univariate-arima.ipynb))
+   * Demand Forecasting for Multiple Entities Using Generalized Linear Models ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-multivariate-glm.ipynb)) (🧪)
 * Deep Learning Methods
    * Demand Forecasting for Multiple Entities Using DeepAR ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-multivariate-deepar.ipynb))
    * Demand Forecasting for a Single Entity Using NeuralProphet ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-univariate-neural-prophet.ipynb))
@@ -127,16 +130,16 @@ These notebooks can be used to create price optimization, promotion (markdown) o
 * Dynamic Pricing
    * Dynamic Pricing Using Thompson Sampling ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/dynamic-pricing-thompson.ipynb))
    * Dynamic Pricing with Limited Price Experimentation ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/dynamic-pricing-limited-experimentation.ipynb))
-   * Price Optimization Using Reinforcement Learning (DQN) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-using-dqn-reinforcement-learning.ipynb))
+   * Price Optimization Using Reinforcement Learning (DQN) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-using-dqn-reinforcement-learning.ipynb)) (🚀)
 
 #### Supply Chain
 These notebooks and applications can be used to develop procurement and inventory allocation solutions, as well as provide supply chain managers with advanced decisions support and automation tools.
 
    * Single-echelon Inventory Optimization Using (s,Q) and (R,S) Policies ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/single-echelon-sQ-RS.ipynb))
-   * Multi-echelon Inventory Optimization Using Reinforcement Learning (DDPG, TD3) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/supply-chain-reinforcement-learning.ipynb))
    * Inventory Allocation Optimization ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/inventory-allocation.ipynb))
-   * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world_of_supply/world-of-supply.ipynb))
-   * Supply Chain Control Tower Using LLMs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/control_center_llm/control-center-llm.ipynb))
+   * Multi-echelon Inventory Optimization Using Reinforcement Learning (DDPG, TD3) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/supply-chain-reinforcement-learning.ipynb)) (🚀)
+   * Supply Chain Simulator for Reinforcement Learning Based Optimization (PPO) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/world_of_supply/world-of-supply.ipynb)) (🚀)
+   * Supply Chain Control Tower Using LLMs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/supply-chain/control_center_llm/control-center-llm.ipynb)) (🚀)
    
 #### Smart Manufacturing
 These notebooks can be used to prototype visual quality control and predictive maintenance solutions.
@@ -151,32 +154,13 @@ These questionnaires can be used to assess readiness for typical AI/ML projects 
    * Demand Sensing and Forecasting ([document](https://docs.google.com/document/d/1cd0n9L1pjCSGXgCS0CC3k9DpGiVzNhhmFlyhTXvnqws/edit))
    * Price and Promotion Optimization ([document](https://docs.google.com/document/d/1mHOANKSavhxCn3Y_R9WYnCSWavnmJJdoRj9aFPZlFqE/edit))
    * Next Best Action ([document](https://docs.google.com/document/d/10bo1wUAO8ctjaQqq2Y0mLo9k9itqwjyQysDOu_-C_rA/edit))
- 
-## Basic Templates
-* Generic Regression and Classification Models
-    * Neural Network with Vector Inputs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/regression/vector-models.ipynb))
-    * Neural Network with Sequential Inputs (ConvNet, LSTM, Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/regression/sequence-models.ipynb))
-
-* Enterprise Time Series Analysis
-   * Forecasting Using ARIMA and SARIMA (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-1-algorithm.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/arima-part-2-use-case.ipynb))
-   * Decomposition and Forecasting using Bayesian Structural Time Series (BSTS) (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-1-decomposition.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-2-forecasting.ipynb)
-[3](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-3-forecasting-prophet.ipynb)
-[4](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/bsts-part-4-forecasting-pymc3.ipynb))
-   * Forecasting and Decomposition using Gradient Boosted Decision Trees (GBDT) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/gbdt-forecasting.ipynb))
-   * Forecasting and Decomposition using LSTM with Attention ([notebook](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/lstm-forecasting.ipynb))
-   * Forecasting and Decomposition using VAR/VEC models (notebooks
-[1](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/var-part-1-forecasting-decomposition.ipynb)
-[2](https://github.com/ikatsov/tensor-house/blob/master/_basic-components/time-series/var-part-2-market-data.ipynb))
 
 ## More Documentation
 * The most basic models are described the *Introduction to Algorithmic Marketing*. 
     * Book's website - https://www.algorithmicmarketingbook.com/
 * More advanced models that use deep learning and reinforcement learning techniques are described in *The Theory and Practice of Enterprise AI*. 
     * Book's website - https://www.enterprise-ai-book.com/
+* Templates for basic data science and ML task are available in [TensorHouseBasic](https://github.com/ikatsov/tensor-house-basic) repository. 
 * Most notebooks contain references to specific research papers, industrial reports, and real-world case studies.
     * A manually curated list of [important papers](https://github.com/ikatsov/tensor-house/blob/master/_resources/papers.md) in enterprise AI.
     * A manually curated list of [public datasets](https://github.com/ikatsov/tensor-house/blob/master/_resources/datasets.md) related to enterprise use cases.
