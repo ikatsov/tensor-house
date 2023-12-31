@@ -8,7 +8,7 @@ from langchain.callbacks.base import BaseCallbackHandler
 from processors.program_aided.processor import ProgramAidedProcessor, ProcessingContext
 
 #  Initialization
-image = Image.open('banner.jpeg')
+image = Image.open('banner.png')
 st.image(image)
 
 chain = [

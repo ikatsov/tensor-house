@@ -32,16 +32,16 @@ TensorHouse helps to accelerate the following steps of the solution development:
   <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-world-of-supply.gif" title="Price Optimization Using RL Animation">
 </p>
 
+#### Supply chain management using large language models
+*LLM dynamically writes a python script that invokes multiple APIs to answer user's question:*
+<p align="center">
+  <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-sc-control-tower.gif" title="Dynamic Scripting Using LLMs" width="90%">
+</p>
+
 #### Anomaly detection in images using autoencoders
 *Deep autoencoders produce image reconstructions that facilitate detection of defect locations:*
 <p align="center">
   <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/visual-anomaly-example.png" title="Anomaly Detection in Images">
-</p>
-
-#### Supply chain management using large language models
-*LLM dynamically writes a python script that invokes multiple APIs to answer user's question:*
-<p align="center">
-  <img src="https://github.com/ikatsov/tensor-house/blob/master/_resources/demo-animation-sc-control-tower.gif" title="Dynamic Scripting Using LLMs" width="60%">
 </p>
 
 ## List of Prototypes and Templates
