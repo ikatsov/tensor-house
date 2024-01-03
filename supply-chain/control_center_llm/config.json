@@ -1,14 +1,9 @@
 {
-    "api_type": "azure",
-    "api_base": "<< YOUR_API_URL >>",
-    "api_version": "2023-05-15",
-    "api_key": "<< YOUR_API_KEY >>",
+    "google_api_key": "<<YOUR KEY>>",
+    "text_model": "gemini-pro",
 
-    "text_deployment": "scct-gpt-35-turbo-16k",
-    "text_model": "gpt-35-turbo-16k",
-
-    "embedding_deployment": "scct-embedding-ada-002",
-    "embedding_model": "text-embedding-ada-002",
+    "project": "<<YOUR PROJECT NAME>>",
+    "location": "us-central1",
 
     "data_folder": "data"
 }

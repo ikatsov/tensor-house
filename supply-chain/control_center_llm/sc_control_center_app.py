@@ -71,14 +71,11 @@ if prompt := st.chat_input("What is up?"):
             placeholder = st.empty()
             full_content = []
 
-
-            class ProcessorHandler(BaseCallbackHandler):
-                def on_llm_new_token(self, token: str, **kwargs) -> None:
+            def on_llm_new_token(token: str) -> None:
                     full_content.append(token)
                     placeholder.markdown("".join(full_content) + "▌")
 
-
-            st.session_state.processor.process(step['stage'], context, ProcessorHandler())
+            st.session_state.processor.process(step['stage'], context, on_llm_new_token)
 
         content = "".join([x for x in full_content if x is not None])
         context.generated_outputs[step["stage"]] = content

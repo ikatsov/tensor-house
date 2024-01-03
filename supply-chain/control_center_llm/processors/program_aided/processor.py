@@ -45,68 +45,72 @@ class ProgramAidedProcessor:
         with open("tools/api.py", "r") as file:
             self.api_docs = file.read()
 
-    def process(self, stage: str, context: ProcessingContext, output_handler: BaseCallbackHandler):
+    def process(self, stage: str, context: ProcessingContext, on_new_token):
         match stage:
             case "create_standalone_query":
-                self.chat_history_to_query(context, output_handler)
+                self.chat_history_to_query(context, on_new_token)
             case "create_logic":
-                self.create_logic(context, output_handler)
+                self.create_logic(context, on_new_token)
             case "create_script":
-                self.create_script(context, output_handler)
+                self.create_script(context, on_new_token)
             case "fix_script":
-                self.fix_script(context, output_handler)
+                self.fix_script(context, on_new_token)
             case "execute_script":
-                self.execute_script(context, output_handler)
+                self.execute_script(context, on_new_token)
             case _:
                 raise Exception(f"Unknown stage [{stage}]")
 
-    def chat_history_to_query(self, context: ProcessingContext, output_handler: BaseCallbackHandler):
-        llm = utilities.get_llm(self.config, output_handler=output_handler)
+    def chat_history_to_query(self, context: ProcessingContext, on_new_token):
+        llm = utilities.get_llm(self.config, streaming=True)
 
         chat_history_str = ""
         for entry in context.full_chat_history:
             if entry['role'] in ('Assistant', 'User'):
                 chat_history_str += f"{entry['role']}:\n{entry['content']}\n\n"
 
-        llm_chain = LLMChain(prompt=CHAT_TO_QUERY_PROMPT, llm=llm)
-        llm_chain.run(chat_history=chat_history_str)
+        prompt = CHAT_TO_QUERY_PROMPT.format_prompt(chat_history=chat_history_str)
+        for chunk in llm.stream(prompt):
+            on_new_token(chunk.content)
 
-    def create_logic(self, context: ProcessingContext, output_handler: BaseCallbackHandler):
-        llm = utilities.get_llm(self.config, output_handler=output_handler, stop=PLANNER_PROMPT_STOP_SEQ)
+    def create_logic(self, context: ProcessingContext, on_new_token):
+        llm = utilities.get_llm(self.config, streaming=True, stop=PLANNER_PROMPT_STOP_SEQ)
 
-        llm_chain = LLMChain(prompt=PLANNER_PROMPT, llm=llm)
-        llm_chain.run(api_docs=self.api_docs,
-                      query=context.generated_outputs["create_standalone_query"])
+        prompt = PLANNER_PROMPT.format_prompt(api_docs=self.api_docs,
+                                              query=context.generated_outputs["create_standalone_query"])
+        for chunk in llm.stream(prompt):
+            on_new_token(chunk.content)
 
-    def create_script(self, context: ProcessingContext, output_handler: BaseCallbackHandler):
-        llm = utilities.get_llm(self.config, output_handler=output_handler, stop=CODER_PROMPT_STOP_SEQ)
+    def create_script(self, context: ProcessingContext, on_new_token):
+        llm = utilities.get_llm(self.config, streaming=True, stop=CODER_PROMPT_STOP_SEQ)
 
-        llm_chain = LLMChain(prompt=CODER_PROMPT, llm=llm)
-        llm_chain.run(api_docs=self.api_docs,
-                      logic_description=context.generated_outputs["create_logic"],
-                      query=context.generated_outputs["create_standalone_query"])
+        prompt = CODER_PROMPT.format_prompt(api_docs=self.api_docs,
+                                            logic_description=context.generated_outputs["create_logic"],
+                                            query=context.generated_outputs["create_standalone_query"])
+        for chunk in llm.stream(prompt):
+            on_new_token(chunk.content)
 
-    def fix_script(self, context: ProcessingContext, output_handler: BaseCallbackHandler):
+    def fix_script(self, context: ProcessingContext, on_new_token):
         script = context.generated_outputs["create_script"]
         self.logger.info("Initial script:\n" + script)
-        code = _extract_code(script)
 
-        llm = utilities.get_llm(self.config, output_handler=output_handler, stop=CRITIC_PROMPT_STOP_SEQ)
+        llm = utilities.get_llm(self.config, streaming=True, stop=CRITIC_PROMPT_STOP_SEQ)
 
-        llm_chain = LLMChain(prompt=CRITIC_PROMPT, llm=llm)
-        llm_chain.run(api_docs=self.api_docs,
-                      query=context.generated_outputs["create_standalone_query"],
-                      python_code=context.generated_outputs["create_script"])
+        prompt = CRITIC_PROMPT.format_prompt(api_docs=self.api_docs,
+                                             query=context.generated_outputs["create_standalone_query"],
+                                             python_code=context.generated_outputs["create_script"])
 
-    def execute_script(self, context: ProcessingContext, output_handler: BaseCallbackHandler):
+        for chunk in llm.stream(prompt):
+            on_new_token(chunk.content)
+
+    def execute_script(self, context: ProcessingContext, on_new_token: BaseCallbackHandler):
         script = context.generated_outputs["fix_script"]
-        self.logger.info("Generated plan:\n" + script)
+        self.logger.info("Final script:\n" + script)
         code = _extract_code(script)
 
         self.logger.info("Executing code:\n" + code)
         utilities.run_code(code, globals={
-            "print_answer": partial(print_answer, output_handler=output_handler),
-            "print_table": partial(print_table, output_handler=output_handler),
+            "print_answer": partial(print_answer, on_new_token=on_new_token),
+            "print_table": partial(print_table, on_new_token=on_new_token),
             "show_line_chart": show_line_chart,
             "search_documents": self.tool_searcher.search_documents,
             "query_inventory": self.tool_database.query_inventory,
