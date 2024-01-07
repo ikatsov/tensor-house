@@ -10,13 +10,23 @@ TensorHouse provides the following resources:
 * Readiness assessment and requirement gathering questionnaires for typical enterprise AI/ML projects.
 * Datasets and simulators for rapid prototyping and model evaluation.
 
-TensorHouse focuses mainly on industry-proven methods and models that were originally developed either by industry practitioners or by academic researchers who worked in collaboration with leading companies in technology, retail, manufacturing, and other sectors.
+TensorHouse focuses mainly on industry-proven solutions that leverage deep learning, reinforcement learning, and casual inference methods and models. Most of these solutions were originally developed either by industry practitioners or by academic researchers who worked in collaboration with leading companies in technology, retail, manufacturing, and other sectors.
 
 ## How Does TensorHouse Help?
 TensorHouse helps to accelerate the following steps of the solution development:
 1. Faster evaluate readiness for specific use cases from the data, integrations, and process perspectives using questionnaires and casual inference templates. 
 2. Choose candidate methods and models for solving your use cases, evaluate and tailor them using simulators and sample datasets. 
 3. Evaluate candidate methods and models on your data, build prototypes, and present preliminary results to stakeholders. 
+
+## What Libs Does TensorHouse Use?
+All prototypes and template are implemented in Python using a limited set of standard libraries: 
+* Deep learning: mostly TensorFlow, some prototypes use PyTorch
+* Reinforcement learning: RLLib
+* Causal inference: DoWhy
+* Probabilistic programming / Bayesian inference: PyMC
+* Generative AI: LangChain
+* Traditional ML: statsmodels, scikit-learn
+* Basic libs: numpy, pandas, matplotlib, seaborn
 
 ## Illustrative Examples
 
@@ -70,9 +80,9 @@ The notebooks can be used to get insights from user-generated content, analyze c
    * Item2Vec Using Word2vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/item2vec.ipynb))
    * Customer2Vec Using Doc2vec (notebooks: [simulator](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec-prototype.ipynb), [prototype](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec.ipynb))
 * Media Mix, Attribution, and Budget Optimization
-   * Campaign Effect Estimation Using Causal Inference Methods (Regression and Matching) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/campaign-effect-causal-inference.ipynb)) (🧪)
+   * Campaign Effect Estimation In Observational Data Using Causal Inference Methods ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/campaign-effect-observational.ipynb)) (🧪)
    * Media Mix Modeling: Adstock Model for Campaign/Channel Attribution ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/mediamix-adstock.ipynb))
-   * Media Mix Modeling: Bayesian Model with Carryover and Saturation Effects ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/mediamix-bayesian.ipynb))
+   * Media Mix Modeling: Bayesian Model with Carryover and Saturation Effects ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/mediamix-bayesian.ipynb)) (🧪)
    * Multitouch Channel Attribution Model Using Deep Learning (LSTM with Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/channel-attribution-lstm.ipynb))
 
 #### Search
@@ -110,7 +120,7 @@ These notebooks can be used to create demand and sales forecasting pipelines. Th
 * Traditional Methods
    * Demand Forecasting for a Single Entity Using Exponential Smoothing (ETS) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-univariate-exponential-smoothing.ipynb))
    * Demand Forecasting for a Single Entity Using Autoregression (ARIMA/SARIMAX) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-univariate-arima.ipynb))
-   * Demand Forecasting for Multiple Entities Using Generalized Linear Models ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-multivariate-glm.ipynb)) (🧪)
+   * Demand Forecasting and Price Effect Estimation for Multiple Entities Using Generalized Linear Models ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-multivariate-glm.ipynb)) (🧪)
 * Deep Learning Methods
    * Demand Forecasting for Multiple Entities Using DeepAR ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-multivariate-deepar.ipynb))
    * Demand Forecasting for a Single Entity Using NeuralProphet ([notebook](https://github.com/ikatsov/tensor-house/blob/master/demand-forecasting/demand-univariate-neural-prophet.ipynb))
