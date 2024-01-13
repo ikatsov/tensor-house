@@ -8,25 +8,25 @@ TensorHouse is a collection of reference Jupyter notebooks and demo AI/ML applic
 TensorHouse provides the following resources:
 * A well-documented repository of reference notebooks and demo applications (prototypes).
 * Readiness assessment and requirement gathering questionnaires for typical enterprise AI/ML projects.
-* Datasets and simulators for rapid prototyping and model evaluation.
+* Datasets, data generators, and simulators for rapid prototyping and model evaluation.
 
 TensorHouse focuses mainly on industry-proven solutions that leverage deep learning, reinforcement learning, and casual inference methods and models. Most of these solutions were originally developed either by industry practitioners or by academic researchers who worked in collaboration with leading companies in technology, retail, manufacturing, and other sectors.
 
 ## How Does TensorHouse Help?
 TensorHouse helps to accelerate the following steps of the solution development:
-1. Faster evaluate readiness for specific use cases from the data, integrations, and process perspectives using questionnaires and casual inference templates. 
+1. Faster evaluate readiness for specific use cases from the data, integration, and process perspectives using questionnaires and casual inference templates. 
 2. Choose candidate methods and models for solving your use cases, evaluate and tailor them using simulators and sample datasets. 
 3. Evaluate candidate methods and models on your data, build prototypes, and present preliminary results to stakeholders. 
 
 ## What Libs Does TensorHouse Use?
 All prototypes and template are implemented in Python using a limited set of standard libraries: 
-* Deep learning: mostly TensorFlow, some prototypes use PyTorch
-* Reinforcement learning: RLLib
-* Causal inference: DoWhy
-* Probabilistic programming / Bayesian inference: PyMC
-* Generative AI: LangChain
-* Traditional ML: statsmodels, scikit-learn
-* Basic libs: numpy, pandas, matplotlib, seaborn
+* Deep learning: mostly `TensorFlow`, some prototypes use `PyTorch`
+* Reinforcement learning: `RLlib`
+* Causal inference: `DoWhy`, `EconML`
+* Probabilistic programming / Bayesian inference: `PyMC`
+* Generative AI: `LangChain`
+* Traditional ML: `statsmodels`, `scikit-learn`, `LightGBM`
+* Basic libs: `NumPy`, `pandas`, `matplotlib`, `seaborn`
 
 ## Illustrative Examples
 
@@ -58,19 +58,21 @@ All prototypes and template are implemented in Python using a limited set of sta
 The artifacts listed in this section can help to rapidly evaluate different solution approaches and build prototypes using your datasets. Artifacts are marked with the following qualifiers:
   * 🧪 - artifacts that are particularly suitable for exploratory data analysis, evaluating the strength of causal effects in your data, and determining whether these data is feasible for solving a certain use case or not.
   * 🚀 - conceptual prototypes that use advanced methods and not necessarily suitable for productization.
+  * 📚 - notebooks that demonstrate basic algorithms and intended mainly for educational purposes
 
 #### Promotions, Offers, and Advertisements
-These notebooks can be used to create customer propensity scoring, offer personalization, and content personalization pipelines. 
+These notebooks can be used to analyze the behavior of *individual* customers, calculate customer propensity (affinity) scores, and personalize offers, content, or digital experience. 
 
 * Customer Scoring and Lifetime Value
    * Customer Propensity Scoring Using Deep Learning (LSTM with Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/propensity-scoring-lstm.ipynb))
+   * Customer-level Uplift Modeling Based On Observational Data Using Causal Inference ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/uplift-modeling-observational.ipynb)) (🧪)
    * Customer Lifetime Value (LTV) Modeling Using Markov Chains ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/markov-ltv.ipynb))
 * Decision Automation
    * Dynamic Content Personalization Using Contextual Bandits (LinUCB) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/dynamic-content-personalization-rl.ipynb))
    * Next Best Action Model Using Reinforcement Learning (Fitted Q Iteration) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/next-best-action-rl.ipynb))
 
 #### Marketing, Customer, and Content Analytics
-The notebooks can be used to get insights from user-generated content, analyze customer behavior, and optimize marketing budgets.
+The notebooks can be used to analyze customer *population* or *segments*, get insights from user-generated content, and optimize marketing budgets.
 
 * Content Analytics
    * Sentiment Analysis Using Basic Transformers ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/sentiment-analysis.ipynb)) 
@@ -80,7 +82,7 @@ The notebooks can be used to get insights from user-generated content, analyze c
    * Item2Vec Using Word2vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/item2vec.ipynb))
    * Customer2Vec Using Doc2vec (notebooks: [simulator](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec-prototype.ipynb), [prototype](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec.ipynb))
 * Media Mix, Attribution, and Budget Optimization
-   * Campaign Effect Estimation In Observational Data Using Causal Inference Methods ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/campaign-effect-observational.ipynb)) (🧪)
+   * Campaign Effect Estimation In Observational Data Using Causal Inference ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/campaign-effect-observational.ipynb)) (🧪)
    * Media Mix Modeling: Adstock Model for Campaign/Channel Attribution ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/mediamix-adstock.ipynb))
    * Media Mix Modeling: Bayesian Model with Carryover and Saturation Effects ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/mediamix-bayesian.ipynb)) (🧪)
    * Multitouch Channel Attribution Model Using Deep Learning (LSTM with Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/channel-attribution-lstm.ipynb))
@@ -89,12 +91,12 @@ The notebooks can be used to get insights from user-generated content, analyze c
 These notebooks can be used to create enterprise search, product catalog search, and visual search solutions.  
 
 * Text Search
-   * Latent Semantic Analysis (LSA) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/text-search-lsa.ipynb))
+   * Latent Semantic Analysis (LSA) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/text-search-lsa.ipynb)) (📚)
    * Retrieval-augmented Generation (RAG) Using LLMs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/retrieval-augmented-generation-llm.ipynb))
    * Retrieval-augmented Generation (RAG) Using LLM Agents ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/retrieval-augmented-generation-llm-agents.ipynb))
 * Visual Search
    * Visual Search by Artistic Style (VGG16) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/visual-search-artistic-style.ipynb))
-   * Visual Search based on Product Type (EfficientNetB0) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/visual-search-similarity.ipynb))
+   * Visual Search Based on Product Type (EfficientNetB0) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/visual-search-similarity.ipynb))
    * Visual Search Using Variational Autoencoders ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/visual-search-vae.ipynb))
    * Image Search Using a Language-Image Model (CLIP) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/search/image-search-clip.ipynb))
 * Structured Data Search
@@ -106,10 +108,10 @@ These notebooks can be used to create enterprise search, product catalog search,
 These notebooks can be used to prototype product recommendation solutions. 
 
 * Basic Collaborative Filtering
-   * Nearest Neighbor User-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/collaborative-filtering-user-based.ipynb))
-   * Nearest Neighbor Item-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/collaborative-filtering-item-based.ipynb))
+   * Nearest Neighbor User-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/collaborative-filtering-user-based.ipynb)) (📚)
+   * Nearest Neighbor Item-based Collaborative Filtering ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/collaborative-filtering-item-based.ipynb)) (📚)
 * Deep and Hybrid Recommenders
-   * Neural Collaborative Filtering - Prototype ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-factorization.ipynb))
+   * Neural Collaborative Filtering - Prototype ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-factorization.ipynb)) (📚)
    * Neural Collaborative Filtering - Hybrid Recommender ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-ncf.ipynb))
    * Behavior Sequence Transformer ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-transformer.ipynb))
    * Graph Recommender Using Node2Vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/recommendations/deep-recommender-graph-node2vec.ipynb))
@@ -134,7 +136,7 @@ These notebooks can be used to create demand and sales forecasting pipelines. Th
 These notebooks can be used to create price optimization, promotion (markdown) optimization, and assortment optimization solutions.
 
 * Static Price, Promotion, and Markdown Optimization
-   * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb))
+   * Market Response Functions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/market-response-functions.ipynb)) (📚)
    * Price Optimization for Multiple Products ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-products.ipynb))
    * Price Optimization for Multiple Time Intervals ([notebook](https://github.com/ikatsov/tensor-house/blob/master/pricing/price-optimization-multiple-time-intervals.ipynb))
 * Dynamic Pricing
@@ -183,3 +185,6 @@ These questionnaires can be used to assess readiness for typical AI/ML projects 
     <img src="https://img.shields.io/badge/Twitter-blue?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter Badge"/>
   </a>
 </div>
+
+## Contribution
+We warmly welcome contributions, such as implementations of new use cases, advanced features and usability improvements for existing use cases, or enhancements to documentation.
