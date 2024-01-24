@@ -56,8 +56,8 @@ All prototypes and template are implemented in Python using a limited set of sta
 
 ## List of Prototypes and Templates
 The artifacts listed in this section can help to rapidly evaluate different solution approaches and build prototypes using your datasets. Artifacts are marked with the following qualifiers:
-  * 🧪 - artifacts that are particularly suitable for exploratory data analysis, evaluating the strength of causal effects in your data, and determining whether these data is feasible for solving a certain use case or not.
-  * 🚀 - conceptual prototypes that use advanced methods and not necessarily suitable for productization.
+  * 🧪 - artifacts that are particularly suitable for exploratory data analysis, evaluating the strength of causal effects in your data, and determining whether these data is feasible for solving a certain use case or not
+  * 🚀 - conceptual prototypes that use advanced methods and not necessarily suitable for productization
   * 📚 - notebooks that demonstrate basic algorithms and intended mainly for educational purposes
 
 #### Promotions, Offers, and Advertisements
@@ -66,18 +66,20 @@ These notebooks can be used to analyze the behavior of *individual* customers, c
 * Customer Scoring and Lifetime Value
    * Customer Propensity Scoring Using Deep Learning (LSTM with Attention) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/propensity-scoring-lstm.ipynb))
    * Customer-level Uplift Modeling Based On Observational Data Using Causal Inference ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/uplift-modeling-observational.ipynb)) (🧪)
-   * Customer Lifetime Value (LTV) Modeling Using Markov Chains ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/markov-ltv.ipynb))
+   * Customer Lifetime Value (LTV) Estimation Using Markov Chains ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/ltv-markov.ipynb))
+   * Customer Lifetime Value (LTV) Estimation Using Bayesian Buy-Till-You-Die (BTYD) Model ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/ltv-btyd-bayesian.ipynb))
 * Decision Automation
    * Dynamic Content Personalization Using Contextual Bandits (LinUCB) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/dynamic-content-personalization-rl.ipynb))
    * Next Best Action Model Using Reinforcement Learning (Fitted Q Iteration) ([notebook](https://github.com/ikatsov/tensor-house/blob/master/promotions/next-best-action-rl.ipynb))
 
 #### Marketing, Customer, and Content Analytics
-The notebooks can be used to analyze customer *population* or *segments*, get insights from user-generated content, and optimize marketing budgets.
+The notebooks can be used to perform *aggregated* analysis of the customer population or segments, get insights from user-generated content, and optimize marketing budgets.
 
 * Content Analytics
    * Sentiment Analysis Using Basic Transformers ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/sentiment-analysis.ipynb)) 
    * Virtual Focus Groups Using LLMs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/virtual-focus-groups.ipynb)) 
 * Customer Behavior Analytics and Embeddings
+   * Recency, Frequency, and Monetary Value (RFM) Analysis of Customer Orders/Transactions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/rfm-analysis.ipynb)) (🧪)
    * Analysis of Customer Behavior Patterns Using LSTM/Transformers ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/behavior-patterns-analytics-lstm.ipynb))
    * Item2Vec Using Word2vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/item2vec.ipynb))
    * Customer2Vec Using Doc2vec (notebooks: [simulator](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec-prototype.ipynb), [prototype](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec.ipynb))

@@ -7,6 +7,7 @@
 The dataset is anonymized and contains a sample of over 3 million grocery orders from more than 200,000 Instacart users. 
 * Data: https://www.instacart.com/datasets/grocery-shopping-2017 or https://www.kaggle.com/c/instacart-market-basket-analysis/data
 * Description: https://gist.github.com/jeremystan/c3b39d947d9b88b3ccff3147dbcf6c6b
+* Backup (data and description): https://drive.google.com/drive/folders/1JC-D3vtYI6iOSGaZ9DoSXDQ4GrvMzqLL
 
 #### Dunnhumby - Retail Transactions (The Complete Journey dataset)
 Household level transactions over two years from a group of 2,500 households who are frequent shoppers at a retailer
@@ -31,6 +32,13 @@ KKBOX offers subscription based music streaming service. The dataset includes us
 This is a Brazilian ecommerce public dataset of orders made at Olist Store. The dataset has information of 100k orders from 2016 to 2018 made at multiple marketplaces in Brazil.
 * Data: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
 * Description: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+* Backup copy (data and description): https://drive.google.com/drive/folders/1vyoG0z7QpAcI4w47HD605-HA3lL45c92
+
+#### UCI Online Retail
+This is a transnational data set which contains all the transactions occurring between 01/12/2010 and 09/12/2011 for a UK-based and registered non-store online retail.
+* Data: https://archive.ics.uci.edu/static/public/352/online+retail.zip
+* Description: https://archive.ics.uci.edu/dataset/352/online+retail
+* Backup copy (data and description): https://drive.google.com/drive/folders/1_u0CjaTPQAh5esUW6ZCyNmvSSs_esgVp
 
 
 ## 2. Product Recommendations
