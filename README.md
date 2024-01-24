@@ -79,7 +79,7 @@ The notebooks can be used to perform *aggregated* analysis of the customer popul
    * Sentiment Analysis Using Basic Transformers ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/sentiment-analysis.ipynb)) 
    * Virtual Focus Groups Using LLMs ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/virtual-focus-groups.ipynb)) 
 * Customer Behavior Analytics and Embeddings
-   * Recency, Frequency, and Monetary Value (RFM) Analysis of Customer Orders/Transactions ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/rfm-analysis.ipynb)) (🧪)
+   * Recency, Frequency, and Monetary Value (RFM) Analysis of Customer Purchases ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/rfm-analysis.ipynb)) (🧪)
    * Analysis of Customer Behavior Patterns Using LSTM/Transformers ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/behavior-patterns-analytics-lstm.ipynb))
    * Item2Vec Using Word2vec ([notebook](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/item2vec.ipynb))
    * Customer2Vec Using Doc2vec (notebooks: [simulator](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec-prototype.ipynb), [prototype](https://github.com/ikatsov/tensor-house/blob/master/marketing-analytics/customer2vec.ipynb))
